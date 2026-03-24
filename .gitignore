@@ -1,0 +1,47 @@
+# ==========================================
+# Archivos de caché y compilación de Python
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ==========================================
+# Entornos Virtuales
+# ==========================================
+venv/
+env/
+.venv/
+env.bak/
+
+# ==========================================
+# Variables de entorno y secretos
+# ==========================================
+.env
+.env.local
+
+# ==========================================
+# Archivos de distribución y empaquetado
+# ==========================================
+build/
+dist/
+*.egg-info/
+
+# ==========================================
+# Caché de Pruebas Unitarias (Testing)
+# ==========================================
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==========================================
+# Configuraciones de Editores de Código (IDEs)
+# ==========================================
+.vscode/
+.idea/
+*.swp
+
+# ==========================================
+# Archivos del Sistema Operativo
+# ==========================================
+.DS_Store
+Thumbs.db
