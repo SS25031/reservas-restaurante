@@ -122,7 +122,7 @@ FinSubProceso
 
 Algoritmo reservas_restaurante
 	Definir opc_menu Como Entero
-	Definir totalReservas Como Entero
+	Definir totalReservas Como Entero //guarda la cantidad de reservas hechas
 	Definir capacidadMesas Como Entero
 	Definir reservacionMesa Como Entero
 	Dimension capacidadMesas[25] //Total de mesas disponibles en el restaurante
@@ -168,15 +168,19 @@ Algoritmo reservas_restaurante
 				
 			2:	
 				//Opcion 2: Ver reservas
+				//Jorge
 				
 			3: 
 				//Opcion 3: Cancelar/Eliminar una reserva
+				//Jorge
 				
 			4: 
 				//Opcion 4: Editar una reserva
+				//Marcos
 				
 			5: 
 				//Opcion 5: Ver mesas disponibles
+				//Katherinne 
 			De Otro Modo:
 				Escribir "Opcion no valida, intente nuevamente"
 		Fin Segun
@@ -184,8 +188,5 @@ Algoritmo reservas_restaurante
 	Escribir "La sesion ha finalizado"
 	
 	//Fin Menu principal
-	
-	
-	
 	
 FinAlgoritmo
