@@ -68,7 +68,7 @@ SubProceso HacerReservacion(capacidadMesas, reservacionMesa, totalReservas Por R
 						Definir j Como Entero
 						reserva_hecha <- Falso // no se ha guardado nada
 						
-						//Recorre las 23 mesas ara buscar una que sirva y este libre
+						//Recorre las 25 mesas ara buscar una que sirva y este libre
 						Para i <- 1 Hasta 25 Hacer
 							//Solo busca si no se se ha hecho la reservacion todavia
 							Si reserva_hecha == Falso Entonces
@@ -125,8 +125,8 @@ Algoritmo reservas_restaurante
 	Definir totalReservas Como Entero
 	Definir capacidadMesas Como Entero
 	Definir reservacionMesa Como Entero
-	Dimension capacidadMesas[25]
-	Dimension reservacionMesa[100, 3]
+	Dimension capacidadMesas[25] //Total de mesas disponibles en el restaurante
+	Dimension reservacionMesa[100, 3] //Se pueden guardar hasta 100 reservaciones, junto con el dia, turno y numero de mesa
 	totalReservas <- 0
 
 	//Capacidad para cada mesa (asignacion)
