@@ -1,0 +1,17 @@
+--Variables globales del menu principal
+
+*opc_menu: guarda la opcion que el usuario elige en el menu principal
+*totalReservas: lleva la cuenta de cuantas reservas se han guardado en total
+*capacidadMesas: arrelgo, lista de 25 espacios que guarda la capacidad de cada mesa
+*reservacionMesa: matriz, guarda hasta 100 reservaciones. Los datos que guarda son dia, turno y mesa
+
+--Variables de la funcio HacerReservacion
+
+*cantidad_personas: cantidad de personas para la reservacion
+*opc_dia: dia de la reserva
+*opc_turno: turno de la reserva (manana, tarde o noche -1,2,3-)
+*i, j: variables auxiliares para hacer funcionar los ciclos For
+*contador_dia: cuenta cuantas reservas hay en un dia especifico para no pasar de 25
+*mesa_encontrada: variable logica para saber si existe alguna mesa lo suficientemente grande (capacidad)
+*reserva_hecha: variable logica para detener la busqueda en cuanto se guarda la reserva
+*mesa_ocupada: variable logica que avisa si la mesa choca con otra reserva el mismo dia y turno. 
