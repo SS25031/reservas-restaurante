@@ -2,10 +2,11 @@
 
 *opc_menu: guarda la opcion que el usuario elige en el menu principal
 *totalReservas: lleva la cuenta de cuantas reservas se han guardado en total
-*capacidadMesas: arrelgo, lista de 25 espacios que guarda la capacidad de cada mesa
-*reservacionMesa: matriz, guarda hasta 100 reservaciones. Los datos que guarda son dia, turno y mesa
+*contadorID: contador que genera el ID unico y permanente de cada reserva (solo crece, nunca se reinicia)
+*capacidadMesas: arreglo, lista de 25 espacios que guarda la capacidad de cada mesa
+*reservacionMesa: matriz, guarda hasta 100 reservaciones. Las columnas son: [1] dia, [2] turno, [3] numero de mesa, [4] ID permanente de la reserva
 
---Variables de la funcio HacerReservacion
+--Variables de la funcion HacerReservacion
 
 *cantidad_personas: cantidad de personas para la reservacion
 *opc_dia: dia de la reserva
@@ -14,4 +15,19 @@
 *contador_dia: cuenta cuantas reservas hay en un dia especifico para no pasar de 25
 *mesa_encontrada: variable logica para saber si existe alguna mesa lo suficientemente grande (capacidad)
 *reserva_hecha: variable logica para detener la busqueda en cuanto se guarda la reserva
-*mesa_ocupada: variable logica que avisa si la mesa choca con otra reserva el mismo dia y turno. 
+*mesa_ocupada: variable logica que avisa si la mesa choca con otra reserva el mismo dia y turno
+
+--Variables de la funcion VerReservas
+
+*i: variable auxiliar para recorrer el arreglo de reservas
+*nombre_dia: cadena auxiliar para mostrar el nombre del dia en lugar del numero
+*nombre_turno: cadena auxiliar para mostrar el nombre del turno en lugar del numero
+
+--Variables de la funcion CancelarReserva
+
+*id_reserva: ID permanente de la reserva que el usuario desea cancelar
+*pos_reserva: posicion en el arreglo donde se encontro la reserva con el ID buscado (0 si no existe)
+*i: variable auxiliar para recorrer el arreglo y desplazar elementos al cancelar
+*nombre_dia: cadena auxiliar para mostrar el nombre del dia antes de confirmar la cancelacion
+*nombre_turno: cadena auxiliar para mostrar el nombre del turno antes de confirmar la cancelacion
+*confirmacion: caracter S/N que el usuario ingresa para confirmar o abortar la cancelacion 
