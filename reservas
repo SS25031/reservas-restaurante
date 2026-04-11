@@ -1,0 +1,313 @@
+//FUNCIONES
+//Funcion HacerReservacion
+
+SubProceso HacerReservacion(capacidadMesas, reservacionMesa, totalReservas Por Referencia, contadorID Por Referencia)
+	
+	Definir cantidad_personas, opc_dia, opc_turno, i, contador_dia  Como Entero
+	Definir mesa_encontrada Como Logico
+	
+	Escribir "*** Usted esta creando una nueva reserva ***"
+	
+	Escribir "Ingrese la cantidad de personas para la reserva: "
+	Leer cantidad_personas
+	
+	mesa_encontrada <- Falso
+	
+	Para i <- 1 Hasta 25 Hacer
+		Si capacidadMesas[i] >= cantidad_personas Entonces
+			mesa_encontrada <- Verdadero
+		FinSi
+	FinPara
+	
+	Si mesa_encontrada == Falso Entonces
+		Escribir "Lo sentimos, no hay mesas disponibles para esa cantidad"
+	SiNo
+		
+		Escribir "Seleccione el dia para la reserva: "
+		Escribir "1. Lunes"
+		Escribir "2. Martes"
+		Escribir "3. Miercoles"
+		Escribir "4. Jueves"
+		Escribir "5. Viernes"
+		Escribir "6. Sabado"
+		Escribir "7. Domingo"
+		Leer opc_dia
+		
+		Si opc_dia >= 1 y opc_dia <= 7 Entonces
+			
+			contador_dia <- 0
+			
+			Para i <- 1 Hasta totalReservas Hacer
+				Si reservacionMesa[i,1] == opc_dia Entonces
+					contador_dia <- contador_dia + 1
+				FinSi
+			FinPara
+			
+			Si contador_dia >= 25 Entonces
+				Escribir "Dia lleno (max 25 reservas)"
+			SiNo
+				
+				Escribir "Turno:"
+				Escribir "1. Mañana"
+				Escribir "2. Tarde"
+				Escribir "3. Noche"
+				Leer opc_turno
+				
+				Si opc_turno >=1 y opc_turno <=3 Entonces
+					
+					Definir reserva_hecha, mesa_ocupada Como Logico
+					Definir j Como Entero
+					
+					reserva_hecha <- Falso
+					
+					Para i <- 1 Hasta 25 Hacer
+						
+						Si reserva_hecha == Falso Entonces
+							
+							Si capacidadMesas[i] >= cantidad_personas Entonces
+								
+								mesa_ocupada <- Falso
+								
+								Para j <- 1 Hasta totalReservas Hacer
+									Si reservacionMesa[j,1]==opc_dia y reservacionMesa[j,2]==opc_turno y reservacionMesa[j,3]==i Entonces
+										mesa_ocupada <- Verdadero
+									FinSi
+								FinPara
+								
+								Si mesa_ocupada == Falso Entonces
+									
+									totalReservas <- totalReservas + 1
+									contadorID <- contadorID + 1
+									
+									reservacionMesa[totalReservas,1] <- opc_dia
+									reservacionMesa[totalReservas,2] <- opc_turno
+									reservacionMesa[totalReservas,3] <- i
+									reservacionMesa[totalReservas,4] <- contadorID
+									
+									reserva_hecha <- Verdadero
+									
+									Escribir "Reserva exitosa"
+									Escribir "Mesa: ", i
+									Escribir "ID: ", contadorID
+									
+								FinSi
+							FinSi
+						FinSi
+					FinPara
+					
+					Si reserva_hecha == Falso Entonces
+						Escribir "No hay mesas disponibles en ese turno"
+					FinSi
+					
+				SiNo
+					Escribir "Turno invalido"
+				FinSi
+				
+			FinSi
+		SiNo
+			Escribir "Dia invalido"
+		FinSi
+	FinSi
+	
+FinSubProceso
+
+
+//Funcion VerReservas
+SubProceso VerReservas(reservacionMesa, capacidadMesas, totalReservas)
+	Definir i Como Entero
+	
+	Si totalReservas == 0 Entonces
+		Escribir "No hay reservas"
+	SiNo
+		Para i <- 1 Hasta totalReservas Hacer
+			Escribir "ID:", reservacionMesa[i,4]
+			Escribir "Dia:", reservacionMesa[i,1]
+			Escribir "Turno:", reservacionMesa[i,2]
+			Escribir "Mesa:", reservacionMesa[i,3], " Cap:", capacidadMesas[reservacionMesa[i,3]]
+			Escribir "-------------------"
+		FinPara
+	FinSi
+FinSubProceso
+
+
+//Funcion CancelarReserva
+SubProceso CancelarReserva(reservacionMesa Por Referencia, capacidadMesas, totalReservas Por Referencia)
+	Definir id, pos, i Como Entero
+	
+	Escribir "ID a cancelar:"
+	Leer id
+	
+	pos <- 0
+	
+	Para i <- 1 Hasta totalReservas Hacer
+		Si reservacionMesa[i,4] == id Entonces
+			pos <- i
+		FinSi
+	FinPara
+	
+	Si pos == 0 Entonces
+		Escribir "No existe"
+	SiNo
+		
+		Para i <- pos Hasta totalReservas-1 Hacer
+			reservacionMesa[i,1] <- reservacionMesa[i+1,1]
+			reservacionMesa[i,2] <- reservacionMesa[i+1,2]
+			reservacionMesa[i,3] <- reservacionMesa[i+1,3]
+			reservacionMesa[i,4] <- reservacionMesa[i+1,4]
+		FinPara
+		
+		totalReservas <- totalReservas - 1
+		
+		Escribir "Cancelada"
+		
+	FinSi
+FinSubProceso
+
+
+// Marcos Alas: Ver mesas disponibles
+SubProceso VerMesasDisponibles(reservacionMesa, capacidadMesas, totalReservas)
+	Definir dia, turno, i, j Como Entero
+	Definir ocupada Como Logico
+	
+	Escribir "*** MESAS DISPONIBLES ***"
+	
+	Escribir "Ingrese dia (1-7):"
+	Leer dia
+	
+	Escribir "Ingrese turno (1-3):"
+	Leer turno
+	
+	Para i <- 1 Hasta 25 Hacer
+		ocupada <- Falso
+		
+		Para j <- 1 Hasta totalReservas Hacer
+			Si reservacionMesa[j,1] == dia y reservacionMesa[j,2] == turno y reservacionMesa[j,3] == i Entonces
+				ocupada <- Verdadero
+			FinSi
+		FinPara
+		
+		Si ocupada == Falso Entonces
+			Escribir "Mesa ", i, " disponible (Capacidad: ", capacidadMesas[i], ")"
+		FinSi
+	FinPara
+FinSubProceso
+
+
+// Marcos Alas: Editar reserva
+SubProceso EditarReserva(reservacionMesa Por Referencia, totalReservas)
+	Definir id_buscar, pos, i, nuevo_dia, nuevo_turno Como Entero
+	Definir conflicto Como Logico
+	
+	Escribir "*** EDITAR RESERVA ***"
+	
+	Si totalReservas == 0 Entonces
+		Escribir "No hay reservas"
+	SiNo
+		
+		Escribir "ID:"
+		Leer id_buscar
+		
+		pos <- 0
+		
+		Para i <- 1 Hasta totalReservas Hacer
+			Si reservacionMesa[i,4] == id_buscar Entonces
+				pos <- i
+			FinSi
+		FinPara
+		
+		Si pos == 0 Entonces
+			Escribir "No encontrada"
+		SiNo
+			
+			Escribir "Nuevo dia:"
+			Leer nuevo_dia
+			
+			Escribir "Nuevo turno:"
+			Leer nuevo_turno
+			
+			conflicto <- Falso
+			
+			Para i <- 1 Hasta totalReservas Hacer
+				Si i <> pos Entonces
+					Si reservacionMesa[i,1]==nuevo_dia y reservacionMesa[i,2]==nuevo_turno y reservacionMesa[i,3]==reservacionMesa[pos,3] Entonces
+						conflicto <- Verdadero
+					FinSi
+				FinSi
+			FinPara
+			
+			Si conflicto Entonces
+				Escribir "Conflicto de horario"
+			SiNo
+				reservacionMesa[pos,1] <- nuevo_dia
+				reservacionMesa[pos,2] <- nuevo_turno
+				Escribir "Actualizada"
+			FinSi
+			
+		FinSi
+	FinSi
+FinSubProceso
+
+
+
+Algoritmo reservas_restaurante
+	
+	Definir opc_menu, totalReservas, contadorID, i Como Entero
+	Definir capacidadMesas, reservacionMesa Como Entero
+	
+	Dimension capacidadMesas[25]
+	Dimension reservacionMesa[100,4]
+	
+	totalReservas <- 0
+	contadorID <- 0
+	
+	//Capacidades
+	Para i<-1 Hasta 5 Hacer
+		capacidadMesas[i] <- 2
+	FinPara
+	
+	Para i<-6 Hasta 10 Hacer
+		capacidadMesas[i] <- 4
+	FinPara
+	
+	Para i<-11 Hasta 15 Hacer
+		capacidadMesas[i] <- 6
+	FinPara
+	
+	Para i<-16 Hasta 20 Hacer
+		capacidadMesas[i] <- 8
+	FinPara
+	
+	Para i<-21 Hasta 25 Hacer
+		capacidadMesas[i] <- 10
+	FinPara
+	
+	//MENU
+	Repetir
+		
+		Escribir "1. Reservar"
+		Escribir "2. Ver reservas"
+		Escribir "3. Cancelar"
+		Escribir "4. Editar"  //Marcos Alas 
+		Escribir "5. Mesas disponibles" //Marcos Alas
+		Escribir "0. Salir"
+		
+		Leer opc_menu
+		
+		Segun opc_menu Hacer
+			
+			1:
+				HacerReservacion(capacidadMesas, reservacionMesa, totalReservas, contadorID)
+			2:
+				VerReservas(reservacionMesa, capacidadMesas, totalReservas)
+			3:
+				CancelarReserva(reservacionMesa, capacidadMesas, totalReservas)
+			4:
+				EditarReserva(reservacionMesa, totalReservas)
+			5:
+				VerMesasDisponibles(reservacionMesa, capacidadMesas, totalReservas)
+				
+		FinSegun
+		
+	Hasta Que opc_menu == 0
+	
+FinAlgoritmo
