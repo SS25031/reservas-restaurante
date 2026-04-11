@@ -293,6 +293,88 @@ SubProceso CancelarReserva(reservacionMesa Por Referencia, capacidadMesas, total
 	FinSi
 FinSubProceso
 
+// Marcos Alas: Funcion Ver mesas disponibles
+SubProceso VerMesasDisponibles(reservacionMesa, capacidadMesas, totalReservas)
+	Definir dia, turno, i, j Como Entero
+	Definir ocupada Como Logico
+	
+	Escribir "*** MESAS DISPONIBLES ***"
+	
+	Escribir "Ingrese dia (1-7):"
+	Leer dia
+	
+	Escribir "Ingrese turno (1-3):"
+	Leer turno
+	
+	Para i <- 1 Hasta 25 Hacer
+		ocupada <- Falso
+		
+		Para j <- 1 Hasta totalReservas Hacer
+			Si reservacionMesa[j,1] == dia y reservacionMesa[j,2] == turno y reservacionMesa[j,3] == i Entonces
+				ocupada <- Verdadero
+			FinSi
+		FinPara
+		
+		Si ocupada == Falso Entonces
+			Escribir "Mesa ", i, " disponible (Capacidad: ", capacidadMesas[i], ")"
+		FinSi
+	FinPara
+FinSubProceso
+
+
+// Marcos Alas: Funcion Editar Reserva
+SubProceso EditarReserva(reservacionMesa Por Referencia, totalReservas)
+	Definir id_buscar, pos, i, nuevo_dia, nuevo_turno Como Entero
+	Definir conflicto Como Logico
+	
+	Escribir "*** EDITAR RESERVA ***"
+	
+	Si totalReservas == 0 Entonces
+		Escribir "No hay reservas"
+	SiNo
+		
+		Escribir "ID:"
+		Leer id_buscar
+		
+		pos <- 0
+		
+		Para i <- 1 Hasta totalReservas Hacer
+			Si reservacionMesa[i,4] == id_buscar Entonces
+				pos <- i
+			FinSi
+		FinPara
+		
+		Si pos == 0 Entonces
+			Escribir "No encontrada"
+		SiNo
+			
+			Escribir "Nuevo dia:"
+			Leer nuevo_dia
+			
+			Escribir "Nuevo turno:"
+			Leer nuevo_turno
+			
+			conflicto <- Falso
+			
+			Para i <- 1 Hasta totalReservas Hacer
+				Si i <> pos Entonces
+					Si reservacionMesa[i,1]==nuevo_dia y reservacionMesa[i,2]==nuevo_turno y reservacionMesa[i,3]==reservacionMesa[pos,3] Entonces
+						conflicto <- Verdadero
+					FinSi
+				FinSi
+			FinPara
+			
+			Si conflicto Entonces
+				Escribir "Conflicto de horario"
+			SiNo
+				reservacionMesa[pos,1] <- nuevo_dia
+				reservacionMesa[pos,2] <- nuevo_turno
+				Escribir "Actualizada"
+			FinSi
+			
+		FinSi
+	FinSi
+FinSubProceso
 
 
 Algoritmo reservas_restaurante
@@ -351,15 +433,17 @@ Algoritmo reservas_restaurante
 				//Opcion 3: Cancelar/Eliminar una reserva
 				CancelarReserva(reservacionMesa, capacidadMesas, totalReservas)
 				
-			4: 
-				//Opcion 4: Editar una reserva
-				//Marcos
-				
+		    4:
+                //Opcion4 Editar la reserva Marcos Alas 
+				EditarReserva(reservacionMesa, totalReservas)
+
 			5: 
-				//Opcion 5: Ver mesas disponibles
-				//Katherinne 
+                //Opcion 5 Ver las mesas disponibles Marcos Alas 
+				VerMesasDisponibles(reservacionMesa, capacidadMesas, totalReservas) 
+
 			De Otro Modo:
 				Escribir "Opcion no valida, intente nuevamente"
+
 		Fin Segun
 	Hasta Que opc_menu == 0
 	Escribir "La sesion ha finalizado"
