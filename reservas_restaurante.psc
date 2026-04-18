@@ -309,11 +309,13 @@ SubProceso VerMesasDisponibles(reservacionMesa, capacidadMesas, totalReservas)
 	Para i <- 1 Hasta 25 Hacer
 		ocupada <- Falso
 		
-		Para j <- 1 Hasta totalReservas Hacer
-			Si reservacionMesa[j,1] == dia y reservacionMesa[j,2] == turno y reservacionMesa[j,3] == i Entonces
-				ocupada <- Verdadero
-			FinSi
-		FinPara
+		Si totalReservas > 0 Entonces
+			Para j <- 1 Hasta totalReservas Hacer
+				Si reservacionMesa[j,1] == dia y reservacionMesa[j,2] == turno y reservacionMesa[j,3] == i Entonces
+					ocupada <- Verdadero
+				FinSi
+			FinPara
+		FinSi
 		
 		Si ocupada == Falso Entonces
 			Escribir "Mesa ", i, " disponible (Capacidad: ", capacidadMesas[i], ")"
