@@ -9,8 +9,8 @@ Sistema de reservas para restaurante desarrollado en PSeInt.
 | 1. Hacer una reserva | Completo | Valida capacidad, dia, turno y disponibilidad de mesa. Asigna un ID permanente a cada reserva |
 | 2. Ver reservas | Completo | Lista todas las reservas activas con su ID, dia, turno, mesa y capacidad |
 | 3. Cancelar una reserva | Completo | Busca por ID permanente, muestra los datos para confirmar y elimina la reserva |
-| 4. Editar una reserva | Pendiente | |
-| 5. Ver mesas disponibles | Pendiente | |
+| 4. Editar una reserva | Completo | Busca por ID y pide ingresar nuevo dia y turno para esa reservacion y la actualiza|
+| 5. Ver mesas disponibles | Completo | Muestra las mesas disponibles por dia|
 
 ## Estructura de datos
 
