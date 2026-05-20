@@ -25,6 +25,11 @@ calendario = [[[False] * 25 for turno in range(3)] for dia in range(7)]
 
 
 def crear_reserva(nombre_cliente, dia_reserva, turno_reserva, personas, calendario):
+	
+	#Listas para asociarlas a cada dia y turno que el usuario elija
+	nombre_turno = ["Dia", "Tarde", "Noche"]
+	nombre_dia = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
+	
 	#Obtener el dia y turno de la reserva
 	mesas_del_turno = calendario[dia_reserva][turno_reserva]
 	
@@ -40,13 +45,13 @@ def crear_reserva(nombre_cliente, dia_reserva, turno_reserva, personas, calendar
 			if mesas_del_turno[i] == False and mesas[i] >= personas:
 				mesas_del_turno[i] = True
 				mesa_asignada = i + 1
-				return f"Reserva realizada con exito!. Mesa asignada: {mesa_asignada}"
+				return f"{nombre_cliente}, su reserva fue realizada con exito!. Su numero de mesa es la # {mesa_asignada} para el dia {nombre_dia[dia_reserva]} en el turno de/la {nombre_turno[turno_reserva]}" 
 	return "No se encontraron mesas disponibles con la capacidad requerida"
 	
 	
 while True:
 	print("#-------------------------------------#")
-	print("	        SISTEMA DE RESERVAS         ")
+	print("	    SISTEMA DE RESERVAS         ")
 	print("     RESTAURANTE 'El Corrientazo'    ")
 	print("#-------------------------------------#")
 	print("1. Realizar reserva")
@@ -58,7 +63,33 @@ while True:
 	match opcion:
 		case "1":
 			#Funcion crear_reserva()
-			pass
+			print("#---NUEVA RESERVA---#")
+			
+			#Capturar el nombre del usuario
+			nombre = input("Por favor, ingresa un nombre: ")
+			
+			#Capturar el dia para la reserva
+			print("0. Lunes")
+			print("1. Martes")
+			print("2. Miercoles")
+			print("3. Jueves")
+			print("4. Viernes")
+			print("5. Sabado")
+			print("6. Domingo")
+			dia = int(input("Seleccione el dia para su reserva (0-6):"))
+			
+			#Capturar el turno
+			print("0. Dia")
+			print("1. Tarde")
+			print("2. Noche")
+			turno = int(input("Seleccione un turno (0-2):"))
+			
+			#Capturar cantidad de personas
+			personas = int(input("Ingrese la cantidad de personas para la reserva: "))
+			#Llamada a la funcion crear_reserva()
+			print("#---RESUMEN DE LA RESERVA---#")
+			reserva_creada = crear_reserva(nombre, dia, turno, personas, calendario)
+			print(reserva_creada)
 		case "2":
 			#Funcion cancelar_reserva()
 			pass
@@ -69,6 +100,7 @@ while True:
 			#Salida del sistema
 			print("Saliendo del sistema...")
 			print("Hasta pronto!")
+			break;
 
 	
 	
