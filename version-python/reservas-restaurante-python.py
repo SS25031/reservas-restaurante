@@ -43,6 +43,37 @@ def crear_reserva(nombre_cliente, dia_reserva, turno_reserva, personas, calendar
 				return f"Reserva realizada con exito!. Mesa asignada: {mesa_asignada}"
 	return "No se encontraron mesas disponibles con la capacidad requerida"
 	
+	
+while True:
+	print("#-------------------------------------#")
+	print("	        SISTEMA DE RESERVAS         ")
+	print("     RESTAURANTE 'El Corrientazo'    ")
+	print("#-------------------------------------#")
+	print("1. Realizar reserva")
+	print("2. Cancelar reserva")
+	print("3. Ver mesas disponibles")
+	print("4. Salir del sistema")
+	opcion = input("Selecciona una opcion(1-4): ")
+	
+	match opcion:
+		case "1":
+			#Funcion crear_reserva()
+			pass
+		case "2":
+			#Funcion cancelar_reserva()
+			pass
+		case "3":
+			#Funcion ver_mesas()
+			pass
+		case "4":
+			#Salida del sistema
+			print("Saliendo del sistema...")
+			print("Hasta pronto!")
+
+	
+	
+
+	
 
 				
 	
