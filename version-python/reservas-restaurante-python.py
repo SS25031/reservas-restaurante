@@ -23,7 +23,7 @@ calendario = [[[False] * 25 for turno in range(3)] for dia in range(7)]
 # FUNCIONES
 # -----------------------------------------------#
 
-
+#1. FUNCION PARA CREAR RESERVAS#
 def crear_reserva(nombre_cliente, dia_reserva, turno_reserva, personas, calendario):
 
     # Listas para asociarlas a cada dia y turno que el usuario elija
@@ -51,6 +51,18 @@ def crear_reserva(nombre_cliente, dia_reserva, turno_reserva, personas, calendar
     return "No se encontraron mesas disponibles con la capacidad requerida"
 
 
+#2. FUNCION PARA CANCELAR UNA RESERVA#
+def cancelar_reserva(dia, turno, numero_mesa, calendario):
+    indice_mesa = numero_mesa - 1
+    
+    if calendario[dia][turno][indice_mesa] == True:
+        calendario[dia][turno][indice_mesa] = False
+        return f"La reserva en la mesa {numero_mesa} fue cancelada con exito."
+    else:
+        return f"Parece que la mesa {numero_mesa} ya estaba libre. No se produjeron cambios."
+
+
+#MENU PRINCIPAL#
 while True:
     print("#-------------------------------------#")
     print("	    SISTEMA DE RESERVAS         ")
