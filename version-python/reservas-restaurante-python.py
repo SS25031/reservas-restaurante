@@ -19,6 +19,12 @@ mesas = mesa_1_5 + mesa_6_10 + mesa_11_15 + mesa_16_20 + mesa_21_25
 # cada mesa inicia como False (libre) en todos los turnos(dia, tarde, noche)
 calendario = [[[False] * 25 for turno in range(3)] for dia in range(7)]
 
+# Listas para asociarlas a cada dia y turno que el usuario elija
+nombre_turno = ["Dia", "Tarde", "Noche"]
+nombre_dia = ["Lunes", "Martes", "Miercoles",
+                  "Jueves", "Viernes", "Sabado", "Domingo"]
+
+
 # -----------------------------------------------#
 # FUNCIONES
 # -----------------------------------------------#
@@ -27,11 +33,6 @@ calendario = [[[False] * 25 for turno in range(3)] for dia in range(7)]
 
 
 def crear_reserva(nombre_cliente, dia_reserva, turno_reserva, personas, calendario):
-
-    # Listas para asociarlas a cada dia y turno que el usuario elija
-    nombre_turno = ["Dia", "Tarde", "Noche"]
-    nombre_dia = ["Lunes", "Martes", "Miercoles",
-                  "Jueves", "Viernes", "Sabado", "Domingo"]
 
     # Obtener el dia y turno de la reserva
     mesas_del_turno = calendario[dia_reserva][turno_reserva]
@@ -52,8 +53,9 @@ def crear_reserva(nombre_cliente, dia_reserva, turno_reserva, personas, calendar
                 return f"{nombre_cliente}, su reserva fue realizada con exito!. Su numero de mesa es la # {mesa_asignada} para el dia {nombre_dia[dia_reserva]} en el turno de/la {nombre_turno[turno_reserva]}"
     return "No se encontraron mesas disponibles con la capacidad requerida"
 
-
 # 2. FUNCION PARA CANCELAR UNA RESERVA#
+
+
 def cancelar_reserva(dia, turno, numero_mesa, calendario):
     indice_mesa = numero_mesa - 1
 
@@ -62,6 +64,17 @@ def cancelar_reserva(dia, turno, numero_mesa, calendario):
         return f"La reserva en la mesa {numero_mesa} fue cancelada con exito."
     else:
         return f"Parece que la mesa {numero_mesa} ya estaba libre. No se produjeron cambios."
+
+# . 3 FUNCION PARA VER MESAS DISPONIBLES
+
+
+def ver_mesas_disponibles(dia, turno, calendario):
+    mesas = calendario[dia][turno]
+    for i in range(len(mesas)):
+        if mesas[i] == True:
+            print(f"Mesa {i + 1}: [OCUPADA]")
+        else:
+            print(f"Mesa {i + 1}: [LIBRE]")
 
 
 # MENU PRINCIPAL#
@@ -176,7 +189,37 @@ while True:
             print(reserva_cancelada)
         case "3":
             # Funcion ver_mesas()
-            pass
+            print("#---ESTADO DE MESAS---#")
+            # Capturar el dia
+            print(
+                "0.Lunes | 1. Martes | 2. Miercoles | 3. Jueves | 4. Viernes | 5. Sabado | 6. Domingo")
+            while True:
+                try:
+                    dia = int(
+                        input("Ingrese el dia para verficar mesas disponibles (0 - 6):"))
+                    if 0 <= dia <= 6:
+                        break
+                    else:
+                        print("Por favor, ingrese un numero valido entre 0 y 6")
+                except ValueError:
+                    print("No se deben ingresar letras, solo numeros")
+
+            # Capturar el turno
+            print("0. Dia | 1. Tarde | 2. Noche")
+            while True:
+                try:
+                    turno = int(
+                        input("Ingrese el turno del dia escogido para verificar mesas disponibles (0 - 2):"))
+                    if 0 <= turno <= 2:
+                        break
+                    else:
+                        print("Por favor, ingrese un numero valido entre 0 y 2")
+                except ValueError:
+                    print("No se deben ingresar letras, solo numeros")
+
+            print("#---LISTADO DE MESAS DISPONIBLES PARA EL SIGUIENTE HORRIO---")
+            print(f"DIA: {nombre_dia[dia]} --> TURNO: {nombre_turno[turno]}")
+            ver_mesas_disponibles(dia, turno, calendario)
         case "4":
             # Salida del sistema
             print("Saliendo del sistema...")
