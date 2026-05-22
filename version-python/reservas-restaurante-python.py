@@ -117,8 +117,9 @@ while True:
                     print("No se debn ingresar letras, solo numeros")
 
             # Capturar cantidad de personas
-            personas = int(
-                input("Ingrese la cantidad de personas para la reserva: "))
+            personas = int(input("Ingrese la cantidad de personas para la reserva: "))
+                #PENDIENTE: validar ingreso de numeros negativos, letras o espacios vacios
+                
             # Llamada a la funcion crear_reserva()
             print("#---RESUMEN DE LA RESERVA---#")
             reserva_creada = crear_reserva(
@@ -126,7 +127,31 @@ while True:
             print(reserva_creada)
         case "2":
             # Funcion cancelar_reserva()
-            pass
+            print("#---CANCELAR RESERVA---#")
+            
+            #Capturar el dia:
+            print("0.Lunes | 1. Martes | 2. Miercoles | 3. Jueves | 4. Viernes | 5. Sabado | 6. Domingo")
+            while True:
+            	try:
+            	    dia = int(input("Seleccione el dia agendado para la reserva (0-6):"))
+                    # Condicion: la opcion del menu ingresada debe estar entre 0 y 6
+                    if 0 <= dia <= 6:
+			break  # Si el valor esta entre el rango definido, rompe la exepcion y continua
+                    else:
+                        print("Por favor, ingrese un numero valido entre 0 y 6")
+                except ValueError:
+                    print("No se deben ingresar letras, solo numeros")
+            
+             #Capturar el turno
+            print("0. Dia | 1. Tarde | 2. Noche")
+            turno = input("Ingrese el turno agendado para la reserva (0-2):")
+            
+            #Capturar el # de mesa
+            num_mesa = input("Ingrese su numero de mesa:")
+            
+            
+            reserva_cancelada = cancelar_reserva(dia, turno, num_mesa, calendario)
+            print(reserva_cancelada)
         case "3":
             # Funcion ver_mesas()
             pass
