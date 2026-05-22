@@ -23,7 +23,9 @@ calendario = [[[False] * 25 for turno in range(3)] for dia in range(7)]
 # FUNCIONES
 # -----------------------------------------------#
 
-#1. FUNCION PARA CREAR RESERVAS#
+# 1. FUNCION PARA CREAR RESERVAS#
+
+
 def crear_reserva(nombre_cliente, dia_reserva, turno_reserva, personas, calendario):
 
     # Listas para asociarlas a cada dia y turno que el usuario elija
@@ -51,10 +53,10 @@ def crear_reserva(nombre_cliente, dia_reserva, turno_reserva, personas, calendar
     return "No se encontraron mesas disponibles con la capacidad requerida"
 
 
-#2. FUNCION PARA CANCELAR UNA RESERVA#
+# 2. FUNCION PARA CANCELAR UNA RESERVA#
 def cancelar_reserva(dia, turno, numero_mesa, calendario):
     indice_mesa = numero_mesa - 1
-    
+
     if calendario[dia][turno][indice_mesa] == True:
         calendario[dia][turno][indice_mesa] = False
         return f"La reserva en la mesa {numero_mesa} fue cancelada con exito."
@@ -62,7 +64,7 @@ def cancelar_reserva(dia, turno, numero_mesa, calendario):
         return f"Parece que la mesa {numero_mesa} ya estaba libre. No se produjeron cambios."
 
 
-#MENU PRINCIPAL#
+# MENU PRINCIPAL#
 while True:
     print("#-------------------------------------#")
     print("	    SISTEMA DE RESERVAS         ")
@@ -117,9 +119,10 @@ while True:
                     print("No se debn ingresar letras, solo numeros")
 
             # Capturar cantidad de personas
-            personas = int(input("Ingrese la cantidad de personas para la reserva: "))
-                #PENDIENTE: validar ingreso de numeros negativos, letras o espacios vacios
-                
+            personas = int(
+                input("Ingrese la cantidad de personas para la reserva: "))
+            # PENDIENTE: validar ingreso de numeros negativos, letras o espacios vacios
+
             # Llamada a la funcion crear_reserva()
             print("#---RESUMEN DE LA RESERVA---#")
             reserva_creada = crear_reserva(
@@ -128,29 +131,48 @@ while True:
         case "2":
             # Funcion cancelar_reserva()
             print("#---CANCELAR RESERVA---#")
-            
-            #Capturar el dia:
-            print("0.Lunes | 1. Martes | 2. Miercoles | 3. Jueves | 4. Viernes | 5. Sabado | 6. Domingo")
+            # Capturar el dia:
+            print(
+                "0.Lunes | 1. Martes | 2. Miercoles | 3. Jueves | 4. Viernes | 5. Sabado | 6. Domingo")
             while True:
-            	try:
-            	    dia = int(input("Seleccione el dia agendado para la reserva (0-6):"))
+                try:
+                    dia = int(
+                        input("Ingrese el dia agendado para su reserva(0-6):"))
                     # Condicion: la opcion del menu ingresada debe estar entre 0 y 6
                     if 0 <= dia <= 6:
-			break  # Si el valor esta entre el rango definido, rompe la exepcion y continua
+                        break  # Si el valor esta entre el rango definido, rompe la exepcion y continua
                     else:
                         print("Por favor, ingrese un numero valido entre 0 y 6")
                 except ValueError:
                     print("No se deben ingresar letras, solo numeros")
-            
-             #Capturar el turno
+
+            # Capturar el turno
             print("0. Dia | 1. Tarde | 2. Noche")
-            turno = input("Ingrese el turno agendado para la reserva (0-2):")
-            
-            #Capturar el # de mesa
-            num_mesa = input("Ingrese su numero de mesa:")
-            
-            
-            reserva_cancelada = cancelar_reserva(dia, turno, num_mesa, calendario)
+            while True:
+                try:
+                    turno = int(input(
+                        "Ingrese el turno agendado para la reserva (0-2):"))
+                    if 0 <= turno <= 2:
+                        break
+                    else:
+                        print("Por favor, ingrese un numero valido entre 0 y 2")
+                except ValueError:
+                    print("No se deben ingresar letras, solo numeros")
+
+            # Capturar el # de mesa
+            while True:
+                try:
+                    num_mesa = int(input("Ingrese su numero de mesa (1-25):"))
+                    if 1 <= num_mesa <= 25:
+                        break
+                    else:
+                        print(
+                            f"El numero de mesa {num_mesa} no existe o no es valido. Intente de nuevo")
+                except ValueError:
+                    print("No se deben ingresar letras, solo numeros")
+            print("#---ESTADO DE LA CANCELACION---#")
+            reserva_cancelada = cancelar_reserva(
+                dia, turno, num_mesa, calendario)
             print(reserva_cancelada)
         case "3":
             # Funcion ver_mesas()
