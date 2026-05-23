@@ -24,6 +24,7 @@
 		<a href="/admin" class:nav-active={isActive('/admin')}>Inicio</a>
 		<a href="/admin/reservas" class:nav-active={isActive('/admin/reservas')}>Reservas</a>
 		<a href="/admin/calendario" class:nav-active={isActive('/admin/calendario')}>Calendario</a>
+		<a href="/admin/onboarding" class:nav-active={isActive('/admin/onboarding')}>Configuración</a>
 		<span class="muted">{data.admin.email}</span>
 		<button type="button" class="secondary" onclick={onLogout}>Salir</button>
 	</nav>

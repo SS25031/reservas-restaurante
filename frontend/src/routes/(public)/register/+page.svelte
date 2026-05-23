@@ -14,7 +14,7 @@
 		loading = true;
 		try {
 			await register(fetch, { email, password });
-			await goto('/admin');
+			await goto('/admin/onboarding');
 		} catch (e) {
 			error = e instanceof ApiError ? e.message : 'No se pudo registrar';
 		} finally {

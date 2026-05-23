@@ -43,6 +43,60 @@ export interface OnboardingEstado {
 	turnos_activos: number;
 }
 
+export interface RestaurantConfig {
+	id: number;
+	nombre: string;
+	max_reservas_por_dia: number;
+	capacidad_maxima_grupo: number;
+	onboarding_completado: boolean;
+}
+
+export interface MesaConfig {
+	numero: number;
+	capacidad: number;
+	pos_x: number | null;
+	pos_y: number | null;
+}
+
+export interface TurnoConfig {
+	turno: TurnoApi;
+	activo: boolean;
+	hora_inicio: string | null;
+	hora_fin: string | null;
+}
+
+export interface CalendarDayConfig {
+	fecha: string;
+	cerrado: boolean;
+	nota: string | null;
+}
+
+export interface CompletarOnboardingResponse {
+	completado: boolean;
+}
+
 export interface ReabrirOnboardingResponse {
 	completado: boolean;
+}
+
+export interface PublicRestaurant {
+	nombre: string;
+	capacidad_maxima_grupo: number;
+	acepta_reservas: boolean;
+}
+
+export interface TurnoDisponibilidad {
+	turno: TurnoApi;
+	turno_label: string;
+	disponible: boolean;
+	mesas_libres: number;
+}
+
+export interface Disponibilidad {
+	fecha: string;
+	personas: number;
+	cerrado: boolean;
+	nota: string | null;
+	acepta_reservas: boolean;
+	turnos: TurnoDisponibilidad[];
 }

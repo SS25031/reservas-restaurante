@@ -6,6 +6,7 @@
 	<a class="brand" href="/">Reservas Restaurante</a>
 	<nav>
 		<a href="/">Inicio</a>
+		<a href="/reservar">Reservar</a>
 		<a href="/login">Admin</a>
 	</nav>
 </header>
