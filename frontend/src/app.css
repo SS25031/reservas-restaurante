@@ -50,6 +50,10 @@ main {
 	padding: 2rem 1.25rem;
 }
 
+main.admin-main {
+	max-width: 56rem;
+}
+
 .card {
 	background: #fff;
 	border: 1px solid #e5e7eb;
@@ -116,4 +120,112 @@ button.secondary {
 .status-fail {
 	color: #b91c1c;
 	font-weight: 600;
+}
+
+.stats-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+	gap: 1rem;
+	margin-top: 1.5rem;
+}
+
+.stat-card {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+.stat-label {
+	margin: 0;
+	font-size: 0.85rem;
+	color: #6b7280;
+}
+
+.stat-value {
+	margin: 0;
+	font-size: 2rem;
+	font-weight: 700;
+	line-height: 1.1;
+}
+
+.stat-value-sm {
+	font-size: 1.25rem;
+}
+
+.actions-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	align-items: center;
+}
+
+.button-link {
+	display: inline-block;
+	padding: 0.6rem 1rem;
+	border-radius: 0.375rem;
+	background: #2563eb;
+	color: #fff;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.button-link.secondary {
+	background: #e5e7eb;
+	color: #111827;
+}
+
+.form-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+	gap: 1rem;
+}
+
+select {
+	padding: 0.55rem 0.65rem;
+	border: 1px solid #d1d5db;
+	border-radius: 0.375rem;
+	font: inherit;
+	background: #fff;
+}
+
+.table-wrap {
+	padding: 0;
+	overflow-x: auto;
+}
+
+.data-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9rem;
+}
+
+.data-table th,
+.data-table td {
+	padding: 0.65rem 0.75rem;
+	border-bottom: 1px solid #e5e7eb;
+	text-align: left;
+	vertical-align: top;
+}
+
+.data-table th {
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+	color: #6b7280;
+	background: #f9fafb;
+}
+
+.table-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	white-space: nowrap;
+}
+
+button.danger {
+	background: #dc2626;
+}
+
+button.danger:hover {
+	background: #b91c1c;
 }

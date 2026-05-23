@@ -33,7 +33,16 @@ En desarrollo, arranca **backend y frontend** a la vez. El proxy de Vite reenví
 
 1. Abrir http://localhost:5173/register — crear primer administrador
 2. Tras el registro, redirige a `/admin`
-3. Onboarding UI (mesas, turnos) llegará en subsistemas posteriores; la API ya está protegida
+3. Configurar mesas vía API de onboarding (wizard visual en subsistema 7)
+4. Gestionar reservas en `/admin/reservas` o `/admin/calendario`
+
+### Panel admin
+
+| Ruta | Función |
+|------|---------|
+| `/admin` | Resumen, estado onboarding, reabrir configuración |
+| `/admin/reservas` | Listado, crear, editar fecha/turno, cancelar |
+| `/admin/calendario` | Vista mensual con detalle por día |
 
 ## Desarrollo backend
 
