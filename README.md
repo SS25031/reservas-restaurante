@@ -57,7 +57,7 @@ reservas-restaurante/
 │   ├── alembic/           # migraciones de base de datos
 │   ├── reservas_app/
 │   │   ├── main.py        # FastAPI app + endpoints
-│   │   ├── config.py      # Configuracion (incluye DATABASE_URL)
+│   │   ├── config.py      # Configuración (incluye DATABASE_URL)
 │   │   ├── db.py          # engine, SessionLocal, get_db()
 │   │   ├── exceptions.py  # ReservaError + jerarquía
 │   │   ├── models/        # DTOs (dataclasses) + ORM (SQLAlchemy)
