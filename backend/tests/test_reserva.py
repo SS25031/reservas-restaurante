@@ -4,8 +4,8 @@ from datetime import date
 
 import pytest
 
-from exceptions import ValorInvalidoError
-from models import Reserva, Turno
+from reservas_app.exceptions import ValorInvalidoError
+from reservas_app.models import Reserva, Turno
 
 
 def make_reserva(**overrides) -> Reserva:

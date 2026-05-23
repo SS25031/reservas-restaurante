@@ -1,6 +1,6 @@
 """Sanity tests for model classes."""
 
-from models import Mesa
+from reservas_app.models import Mesa
 
 
 def test_mesa_puede_acomodar_grupo_igual_a_capacidad():

@@ -2,7 +2,7 @@
 
 import pytest
 
-from exceptions import (
+from reservas_app.exceptions import (
     CapacidadInsuficienteError,
     ConflictoHorarioError,
     LimiteDiarioExcedidoError,

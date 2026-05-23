@@ -8,8 +8,8 @@ from collections.abc import Iterable
 from datetime import date
 from typing import TYPE_CHECKING
 
-from config import Configuracion
-from exceptions import (
+from reservas_app.config import Configuracion
+from reservas_app.exceptions import (
     CapacidadInsuficienteError,
     ConflictoHorarioError,
     LimiteDiarioExcedidoError,
@@ -17,10 +17,10 @@ from exceptions import (
     ReservaNoEncontradaError,
     ValorInvalidoError,
 )
-from models import Mesa, Reserva, Turno
+from reservas_app.models import Mesa, Reserva, Turno
 
 if TYPE_CHECKING:
-    from repositories.base import ReservaRepository
+    from reservas_app.repositories.base import ReservaRepository
 
 
 class ReservaService:

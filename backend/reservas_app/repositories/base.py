@@ -2,7 +2,7 @@
 
 from typing import Protocol
 
-from models import Reserva
+from reservas_app.models import Reserva
 
 
 class ReservaRepository(Protocol):
