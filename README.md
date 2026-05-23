@@ -117,4 +117,3 @@ Variables opcionales en `.env`:
 | `SESSION_COOKIE_SECURE` | `false` | `true` en HTTPS |
 
 La base SQLite persiste en el volumen `backend-data`.
-
