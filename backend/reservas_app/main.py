@@ -9,6 +9,7 @@ Endpoints:
 - GET /health
 - /api/v1/auth/* — registro del primer admin, login, logout, me
 - /api/v1/onboarding/* — configuración inicial (requiere sesión admin)
+- /api/v1/admin/* — gestión de reservas (requiere sesión admin)
 """
 
 from fastapi import FastAPI
@@ -16,11 +17,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 
 from reservas_app.api.deps import get_config
-from reservas_app.api.routers import auth, onboarding
+from reservas_app.api.routers import admin, auth, onboarding
 
 _config = get_config()
 
-app = FastAPI(title="Reservas Restaurante API", version="0.5.0")
+app = FastAPI(title="Reservas Restaurante API", version="0.6.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -35,6 +36,11 @@ app.include_router(
     onboarding.router,
     prefix="/api/v1/onboarding",
     tags=["onboarding"],
+)
+app.include_router(
+    admin.router,
+    prefix="/api/v1/admin",
+    tags=["admin"],
 )
 
 

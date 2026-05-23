@@ -8,6 +8,7 @@ from reservas_app.config import Configuracion
 from reservas_app.db import get_db
 from reservas_app.exceptions import SesionInvalidaError
 from reservas_app.models.orm import AdminUserORM
+from reservas_app.services.admin_service import AdminService
 from reservas_app.services.auth_service import AuthService
 from reservas_app.services.onboarding_service import OnboardingService
 
@@ -24,6 +25,10 @@ def get_auth_service(db: Session = Depends(get_db)) -> AuthService:
 
 def get_onboarding_service(db: Session = Depends(get_db)) -> OnboardingService:
     return OnboardingService(db)
+
+
+def get_admin_service(db: Session = Depends(get_db)) -> AdminService:
+    return AdminService(db)
 
 
 def _token_desde_request(request: Request) -> str | None:

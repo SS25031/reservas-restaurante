@@ -98,7 +98,7 @@ def test_guardar_reemplaza_snapshot_anterior(reserva_repo, mesas_en_db):
     assert ultimo_id == 2
 
 
-def test_cargar_ignora_reservas_canceladas(reserva_repo, mesas_en_db):
+def test_cargar_incluye_reservas_canceladas(reserva_repo, mesas_en_db):
     del mesas_en_db
     reservas = [
         Reserva(
@@ -126,8 +126,8 @@ def test_cargar_ignora_reservas_canceladas(reserva_repo, mesas_en_db):
     reserva_repo.guardar(reservas, ultimo_id=2)
 
     cargadas, ultimo_id = reserva_repo.cargar()
-    assert len(cargadas) == 1
-    assert cargadas[0].id == 1
+    assert len(cargadas) == 2
+    assert {r.id for r in cargadas} == {1, 2}
     assert ultimo_id == 2
 
 
@@ -148,4 +148,5 @@ def test_servicio_roundtrip_via_repositorio(db_session, mesas_en_db):
 
     recargado = ReservaService.cargar_desde(mesas, repo)
     assert recargado.total_reservas == 1
+    assert len(recargado.todas_las_reservas()) == 1
     assert recargado.todas_las_reservas()[0].email == "ana@example.com"

@@ -181,6 +181,13 @@ class OnboardingService:
         self._session.commit()
         return {"completado": True}
 
+    def reabrir_onboarding(self) -> dict[str, bool]:
+        """Permite volver a editar la configuración inicial del restaurante."""
+        restaurant = self._restaurant()
+        restaurant.onboarding_completado = False
+        self._session.commit()
+        return {"completado": False}
+
     @staticmethod
     def _mesa_a_dict(mesa: Mesa) -> dict[str, object]:
         return {

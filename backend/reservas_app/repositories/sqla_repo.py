@@ -6,7 +6,6 @@ from sqlalchemy.orm import Session
 from reservas_app.models import Reserva
 from reservas_app.models.mappers import reserva_dto_a_orm, reserva_orm_a_dto
 from reservas_app.models.orm import MesaORM, ReservaORM
-from reservas_app.models.reserva import EstadoReserva
 
 
 class SqlAlchemyReservaRepository:
@@ -20,10 +19,7 @@ class SqlAlchemyReservaRepository:
         stmt = (
             select(ReservaORM, MesaORM.numero)
             .join(MesaORM, ReservaORM.mesa_id == MesaORM.id)
-            .where(
-                ReservaORM.restaurant_id == self._restaurant_id,
-                ReservaORM.estado == EstadoReserva.ACTIVA.value,
-            )
+            .where(ReservaORM.restaurant_id == self._restaurant_id)
             .order_by(ReservaORM.id)
         )
         rows = self._session.execute(stmt).all()
