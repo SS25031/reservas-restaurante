@@ -8,6 +8,23 @@ def _default_database_url() -> str:
     return os.environ.get("DATABASE_URL", "sqlite:///./reservas.db")
 
 
+def _default_cors_origins() -> tuple[str, ...]:
+    raw = os.environ.get("CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173")
+    return tuple(origin.strip() for origin in raw.split(",") if origin.strip())
+
+
+def _default_session_cookie_name() -> str:
+    return os.environ.get("SESSION_COOKIE_NAME", "reservas_session")
+
+
+def _default_session_ttl_hours() -> int:
+    return int(os.environ.get("SESSION_TTL_HOURS", "168"))
+
+
+def _default_cookie_secure() -> bool:
+    return os.environ.get("SESSION_COOKIE_SECURE", "").lower() in {"1", "true", "yes"}
+
+
 @dataclass(frozen=True)
 class Configuracion:
     """Límites configurables del servicio y URL de la base de datos."""
@@ -15,6 +32,10 @@ class Configuracion:
     max_reservas_por_dia: int = 25
     capacidad_maxima_grupo: int = 10
     database_url: str = field(default_factory=_default_database_url)
+    session_cookie_name: str = field(default_factory=_default_session_cookie_name)
+    session_ttl_hours: int = field(default_factory=_default_session_ttl_hours)
+    session_cookie_secure: bool = field(default_factory=_default_cookie_secure)
+    cors_origins: tuple[str, ...] = field(default_factory=_default_cors_origins)
 
     def __post_init__(self) -> None:
         if self.max_reservas_por_dia < 1:
@@ -23,3 +44,11 @@ class Configuracion:
             raise ValueError("capacidad_maxima_grupo debe ser ≥ 1")
         if not self.database_url.strip():
             raise ValueError("database_url no puede estar vacía")
+        if self.session_ttl_hours < 1:
+            raise ValueError("session_ttl_hours debe ser ≥ 1")
+        if not self.session_cookie_name.strip():
+            raise ValueError("session_cookie_name no puede estar vacío")
+
+    @property
+    def session_max_age_seconds(self) -> int:
+        return self.session_ttl_hours * 3600

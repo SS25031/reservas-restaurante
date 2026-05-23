@@ -138,3 +138,17 @@ class AdminUserORM(Base):
     created_at: Mapped[str] = mapped_column(
         Text, nullable=False, server_default="(datetime('now'))"
     )
+
+
+class AdminSessionORM(Base):
+    __tablename__ = "admin_session"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    token: Mapped[str] = mapped_column(Text, nullable=False, unique=True, index=True)
+    admin_user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("admin_user.id"), nullable=False, index=True
+    )
+    expires_at: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[str] = mapped_column(
+        Text, nullable=False, server_default="(datetime('now'))"
+    )

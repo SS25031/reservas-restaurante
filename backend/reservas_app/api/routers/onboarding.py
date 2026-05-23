@@ -1,16 +1,16 @@
-"""Router HTTP del onboarding (sin auth — subsistema 3)."""
+"""Router HTTP del onboarding (requiere sesión admin)."""
 
 from datetime import date
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from reservas_app.api.deps import get_onboarding_service
+from reservas_app.api.deps import get_current_admin, get_onboarding_service
 from reservas_app.api.schemas.onboarding import (
     CalendarDaySchema,
     CalendarioUpdateRequest,
     CompletarResponse,
-    MesasUpdateRequest,
     MesaSchema,
+    MesasUpdateRequest,
     OnboardingEstadoResponse,
     RestaurantResponse,
     RestaurantUpdateRequest,
@@ -26,7 +26,7 @@ from reservas_app.exceptions import (
 from reservas_app.models import Mesa
 from reservas_app.services.onboarding_service import OnboardingService
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_admin)])
 
 
 def _map_domain_error(exc: ReservaError) -> HTTPException:

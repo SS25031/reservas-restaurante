@@ -7,16 +7,30 @@ Para correr el servidor en desarrollo:
 
 Endpoints:
 - GET /health
-- /api/v1/onboarding/* — configuración inicial del restaurante (sin auth)
+- /api/v1/auth/* — registro del primer admin, login, logout, me
+- /api/v1/onboarding/* — configuración inicial (requiere sesión admin)
 """
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 
-from reservas_app.api.routers import onboarding
+from reservas_app.api.deps import get_config
+from reservas_app.api.routers import auth, onboarding
 
-app = FastAPI(title="Reservas Restaurante API", version="0.4.0")
+_config = get_config()
 
+app = FastAPI(title="Reservas Restaurante API", version="0.5.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=list(_config.cors_origins),
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
 app.include_router(
     onboarding.router,
     prefix="/api/v1/onboarding",

@@ -36,7 +36,8 @@ python3 -m venv .venv
 cd backend
 .venv/bin/uvicorn reservas_app.main:app --reload
 # Probar: curl http://localhost:8000/health
-# Onboarding (sin auth por ahora): curl http://localhost:8000/api/v1/onboarding/estado
+# Auth: POST /api/v1/auth/register (primer admin) o /login; cookie HTTPOnly
+# Onboarding (requiere sesión): curl -b cookies.txt http://localhost:8000/api/v1/onboarding/estado
 ```
 
 ## Desarrollo

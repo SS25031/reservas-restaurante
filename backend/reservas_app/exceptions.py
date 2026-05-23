@@ -39,3 +39,19 @@ class OnboardingYaCompletadoError(OnboardingError):
 
 class OnboardingIncompletoError(OnboardingError):
     """Faltan requisitos mínimos para completar el onboarding."""
+
+
+class AuthError(ReservaError):
+    """Error de autenticación o autorización admin."""
+
+
+class CredencialesInvalidasError(AuthError):
+    """Email o contraseña incorrectos."""
+
+
+class RegistroCerradoError(AuthError):
+    """Ya existe un admin; el registro inicial no está disponible."""
+
+
+class SesionInvalidaError(AuthError):
+    """La sesión no existe o expiró."""

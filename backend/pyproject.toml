@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "reservas-restaurante"
-version = "0.4.0"
+version = "0.5.0"
 description = "Backend FastAPI para reservas de restaurante"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -16,6 +16,8 @@ dependencies = [
     "alembic>=1.13",
     "uvicorn[standard]>=0.30",
     "httpx>=0.27",
+    "bcrypt>=4.0",
+    "email-validator>=2.0",
 ]
 
 [project.optional-dependencies]

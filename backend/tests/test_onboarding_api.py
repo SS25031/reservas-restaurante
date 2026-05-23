@@ -9,6 +9,7 @@ from sqlalchemy.pool import StaticPool
 from reservas_app.db import get_db
 from reservas_app.main import app
 from reservas_app.models.orm import Base
+from tests._fixtures.auth import registrar_primer_admin
 from tests.conftest import _seed_restaurant
 
 
@@ -39,65 +40,76 @@ def client():
     engine.dispose()
 
 
-def test_estado_inicial(client):
+@pytest.fixture
+def authed_client(client: TestClient) -> TestClient:
+    registrar_primer_admin(client)
+    return client
+
+
+def test_onboarding_requiere_sesion(client: TestClient):
     response = client.get("/api/v1/onboarding/estado")
+    assert response.status_code == 401
+
+
+def test_estado_inicial(authed_client: TestClient):
+    response = authed_client.get("/api/v1/onboarding/estado")
     assert response.status_code == 200
     data = response.json()
     assert data["completado"] is False
     assert data["mesas_count"] == 0
 
 
-def test_mesas_put_get_roundtrip(client):
+def test_mesas_put_get_roundtrip(authed_client: TestClient):
     payload = {
         "mesas": [
             {"numero": 1, "capacidad": 2, "pos_x": 1.0, "pos_y": 2.0},
             {"numero": 2, "capacidad": 4},
         ]
     }
-    put = client.put("/api/v1/onboarding/mesas", json=payload)
+    put = authed_client.put("/api/v1/onboarding/mesas", json=payload)
     assert put.status_code == 200
     assert len(put.json()) == 2
 
-    get = client.get("/api/v1/onboarding/mesas")
+    get = authed_client.get("/api/v1/onboarding/mesas")
     assert get.status_code == 200
     assert get.json()[0]["numero"] == 1
 
 
-def test_completar_sin_mesas_devuelve_400(client):
-    response = client.post("/api/v1/onboarding/completar")
+def test_completar_sin_mesas_devuelve_400(authed_client: TestClient):
+    response = authed_client.post("/api/v1/onboarding/completar")
     assert response.status_code == 400
 
 
-def test_flujo_completar_onboarding(client):
-    client.put(
+def test_flujo_completar_onboarding(authed_client: TestClient):
+    authed_client.put(
         "/api/v1/onboarding/mesas",
         json={"mesas": [{"numero": 1, "capacidad": 2}]},
     )
-    completar = client.post("/api/v1/onboarding/completar")
+    completar = authed_client.post("/api/v1/onboarding/completar")
     assert completar.status_code == 200
     assert completar.json()["completado"] is True
 
-    estado = client.get("/api/v1/onboarding/estado")
+    estado = authed_client.get("/api/v1/onboarding/estado")
     assert estado.json()["completado"] is True
 
 
-def test_completar_dos_veces_devuelve_409(client):
-    client.put(
+def test_completar_dos_veces_devuelve_409(authed_client: TestClient):
+    authed_client.put(
         "/api/v1/onboarding/mesas",
         json={"mesas": [{"numero": 1, "capacidad": 2}]},
     )
-    client.post("/api/v1/onboarding/completar")
-    segunda = client.post("/api/v1/onboarding/completar")
+    authed_client.post("/api/v1/onboarding/completar")
+    segunda = authed_client.post("/api/v1/onboarding/completar")
     assert segunda.status_code == 409
 
 
-def test_restaurant_put_get(client):
-    response = client.put(
+def test_restaurant_put_get(authed_client: TestClient):
+    response = authed_client.put(
         "/api/v1/onboarding/restaurant",
         json={"nombre": "La Buena Mesa"},
     )
     assert response.status_code == 200
     assert response.json()["nombre"] == "La Buena Mesa"
 
-    get = client.get("/api/v1/onboarding/restaurant")
+    get = authed_client.get("/api/v1/onboarding/restaurant")
     assert get.json()["nombre"] == "La Buena Mesa"
