@@ -2,8 +2,8 @@
 
 import pytest
 
-from reservas_restaurante.__main__ import construir_mesas
 from reservas_restaurante.models import Mesa
+from reservas_restaurante.restaurante import construir_mesas
 from reservas_restaurante.services import ReservaService
 
 

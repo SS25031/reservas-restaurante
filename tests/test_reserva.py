@@ -52,5 +52,7 @@ def test_reserva_str_contiene_campos_clave():
     assert "7000-1234" in texto
     assert "Viernes" in texto
     assert "Noche" in texto
-    assert "10" in texto  # numero_mesa
-    assert "4" in texto   # personas
+    # Anchor numeric assertions to their labels so unrelated digits in
+    # the phone/date/id don't produce false positives.
+    assert "Mesa          : 10" in texto
+    assert "Personas      : 4" in texto
