@@ -1,6 +1,6 @@
 """Pruebas del modelo ORM."""
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
 from reservas_app.models.orm import Base, MesaORM
@@ -28,9 +28,6 @@ def test_mesa_orm_se_persiste_y_se_recupera():
 
 
 def test_mesa_orm_check_capacidad_positiva():
-    import pytest  # noqa: F401
-    from sqlalchemy.exc import IntegrityError  # noqa: F401
-
     engine = create_engine("sqlite:///:memory:", future=True)
     Base.metadata.create_all(engine)
     SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
@@ -41,9 +38,7 @@ def test_mesa_orm_check_capacidad_positiva():
         # `PRAGMA foreign_keys`/`legacy_alter_table`. Pero el CheckConstraint
         # nombrado debe estar en el DDL; lo verificamos así:
         result = session.execute(
-            __import__("sqlalchemy").text(
-                "SELECT sql FROM sqlite_master WHERE name='mesa'"
-            )
+            text("SELECT sql FROM sqlite_master WHERE name='mesa'")
         ).scalar()
         assert "capacidad_positiva" in result
     finally:
