@@ -1,5 +1,5 @@
 from typing import Optional
-from models import Mesa, Reserva
+from ..models import Mesa, Reserva
 
 MAX_RESERVAS_POR_DIA = 25
 

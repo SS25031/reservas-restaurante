@@ -1,5 +1,5 @@
-from models import Dia, Turno
-from services import ReservaService
+from ..models import Dia, Turno
+from ..services import ReservaService
 
 
 class ConsoleUI:
