@@ -49,7 +49,7 @@ Los datos se persisten en `~/.reservas-restaurante/reservas.json`.
 ```
 reservas-restaurante/
 ├── main.py            # composition root + entry point
-├── config.py          # Configuracion (límites configurables)
+├── config.py          # Configuración (límites configurables)
 ├── exceptions.py      # ReservaError + jerarquía de excepciones del dominio
 ├── restaurante.py     # construir_mesas() — layout fijo de 25 mesas
 ├── models/            # Mesa, Reserva, Turno
