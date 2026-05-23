@@ -1,57 +1,70 @@
+"""Reservation domain model."""
+
 from dataclasses import dataclass
+from datetime import date
 from enum import Enum
 
+from ..exceptions import ValorInvalidoError
 
-class Dia(Enum):
-    LUNES = 1
-    MARTES = 2
-    MIERCOLES = 3
-    JUEVES = 4
-    VIERNES = 5
-    SABADO = 6
-    DOMINGO = 7
-
-    @classmethod
-    def nombre(cls, valor: int) -> str:
-        return cls(valor).name.capitalize()
+_NOMBRES_DIA_SEMANA: dict[int, str] = {
+    0: "Lunes",
+    1: "Martes",
+    2: "Miércoles",
+    3: "Jueves",
+    4: "Viernes",
+    5: "Sábado",
+    6: "Domingo",
+}
 
 
 class Turno(Enum):
-    MANANA = 1
-    TARDE = 2
-    NOCHE = 3
+    """Tres turnos diarios del restaurante."""
+
+    MANANA = "Mañana"
+    TARDE = "Tarde"
+    NOCHE = "Noche"
 
     @classmethod
-    def nombre(cls, valor: int) -> str:
-        return cls(valor).name.capitalize()
+    def desde_entero(cls, valor: int) -> "Turno":
+        """Convierte 1/2/3 a Turno. Lanza ValorInvalidoError si está fuera de rango."""
+        mapping = {1: cls.MANANA, 2: cls.TARDE, 3: cls.NOCHE}
+        if valor not in mapping:
+            raise ValorInvalidoError(
+                f"Turno inválido: {valor}. Use 1 (Mañana), 2 (Tarde) o 3 (Noche)."
+            )
+        return mapping[valor]
 
 
 @dataclass
 class Reserva:
-    """Represents a single reservation."""
+    """Una reserva concreta para una mesa en una fecha y turno dados."""
 
     id: int
-    dia: int          # 1–7  (Dia enum value)
-    turno: int        # 1–3  (Turno enum value)
+    fecha: date
+    turno: Turno
     numero_mesa: int
-    capacidad_mesa: int
+    cliente: str
+    telefono: str
+    personas: int
 
     @property
     def nombre_dia(self) -> str:
-        return Dia.nombre(self.dia)
+        return _NOMBRES_DIA_SEMANA[self.fecha.weekday()]
 
     @property
     def nombre_turno(self) -> str:
-        return Turno.nombre(self.turno)
+        return self.turno.value
 
     def __str__(self) -> str:
-        sep = "-" * 42
+        sep = "-" * 50
         return (
             f"{sep}\n"
             f"ID de Reserva : {self.id}\n"
-            f"Dia           : {self.nombre_dia}\n"
+            f"Cliente       : {self.cliente}\n"
+            f"Teléfono      : {self.telefono}\n"
+            f"Fecha         : {self.fecha.isoformat()} ({self.nombre_dia})\n"
             f"Turno         : {self.nombre_turno}\n"
-            f"Mesa          : {self.numero_mesa}  "
-            f"(Capacidad: {self.capacidad_mesa} personas)\n"
+            f"Mesa          : {self.numero_mesa}\n"
+            f"Personas      : {self.personas}\n"
             f"{sep}"
         )

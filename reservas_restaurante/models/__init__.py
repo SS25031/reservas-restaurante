@@ -1,4 +1,4 @@
 from .mesa import Mesa
-from .reserva import Dia, Reserva, Turno
+from .reserva import Reserva, Turno
 
-__all__ = ["Dia", "Mesa", "Reserva", "Turno"]
+__all__ = ["Mesa", "Reserva", "Turno"]
