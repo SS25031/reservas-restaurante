@@ -36,6 +36,7 @@ python3 -m venv .venv
 cd backend
 .venv/bin/uvicorn reservas_app.main:app --reload
 # Probar: curl http://localhost:8000/health
+# Onboarding (sin auth por ahora): curl http://localhost:8000/api/v1/onboarding/estado
 ```
 
 ## Desarrollo
@@ -57,6 +58,7 @@ reservas-restaurante/
 │   ├── alembic/           # migraciones de base de datos
 │   ├── reservas_app/
 │   │   ├── main.py        # FastAPI app + endpoints
+│   │   ├── api/           # routers REST (onboarding, …)
 │   │   ├── config.py      # Configuración (incluye DATABASE_URL)
 │   │   ├── db.py          # engine, SessionLocal, get_db()
 │   │   ├── exceptions.py  # ReservaError + jerarquía

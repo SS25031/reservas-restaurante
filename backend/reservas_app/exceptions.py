@@ -27,3 +27,15 @@ class ReservaNoEncontradaError(ReservaError):
 
 class ConflictoHorarioError(ReservaError):
     """The requested change would collide with another reservation."""
+
+
+class OnboardingError(ReservaError):
+    """Error en el flujo de configuración inicial del restaurante."""
+
+
+class OnboardingYaCompletadoError(OnboardingError):
+    """El onboarding ya fue marcado como completado."""
+
+
+class OnboardingIncompletoError(OnboardingError):
+    """Faltan requisitos mínimos para completar el onboarding."""

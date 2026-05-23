@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "reservas-restaurante"
-version = "0.3.0"
-description = "Sistema de reservas de restaurante (CLI)"
+version = "0.4.0"
+description = "Backend FastAPI para reservas de restaurante"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "Jorge Meléndez" }]
@@ -34,6 +34,9 @@ exclude = ["tests*"]
 line-length = 100
 target-version = "py310"
 extend-exclude = ["alembic"]
+
+[tool.ruff.lint.per-file-ignores]
+"reservas_app/api/**" = ["B008"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]

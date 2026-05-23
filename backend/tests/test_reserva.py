@@ -17,6 +17,7 @@ def make_reserva(**overrides: Any) -> Reserva:
         numero_mesa=10,
         cliente="Ana Pérez",
         telefono="7000-1234",
+        email="ana@example.com",
         personas=4,
     )
     base.update(overrides)

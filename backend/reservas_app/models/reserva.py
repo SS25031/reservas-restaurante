@@ -35,6 +35,13 @@ class Turno(Enum):
         return mapping[valor]
 
 
+class EstadoReserva(Enum):
+    """Estado de persistencia de una reserva."""
+
+    ACTIVA = "activa"
+    CANCELADA = "cancelada"
+
+
 @dataclass
 class Reserva:
     """Una reserva concreta para una mesa en una fecha y turno dados."""
@@ -45,7 +52,9 @@ class Reserva:
     numero_mesa: int
     cliente: str
     telefono: str
+    email: str
     personas: int
+    estado: EstadoReserva = EstadoReserva.ACTIVA
 
     @property
     def nombre_dia(self) -> str:
@@ -55,6 +64,10 @@ class Reserva:
     def nombre_turno(self) -> str:
         return self.turno.value
 
+    @property
+    def activa(self) -> bool:
+        return self.estado is EstadoReserva.ACTIVA
+
     def __str__(self) -> str:
         sep = "-" * 50
         return (
@@ -62,6 +75,7 @@ class Reserva:
             f"ID de Reserva : {self.id}\n"
             f"Cliente       : {self.cliente}\n"
             f"Teléfono      : {self.telefono}\n"
+            f"Email         : {self.email}\n"
             f"Fecha         : {self.fecha.isoformat()} ({self.nombre_dia})\n"
             f"Turno         : {self.nombre_turno}\n"
             f"Mesa          : {self.numero_mesa}\n"

@@ -3,17 +3,25 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
-from reservas_app.models.orm import Base, MesaORM
+from reservas_app.models.orm import Base, MesaORM, RestaurantORM
 
 
-def test_mesa_orm_se_persiste_y_se_recupera():
+def _crear_engine_con_restaurant():
     engine = create_engine("sqlite:///:memory:", future=True)
     Base.metadata.create_all(engine)
     SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+    session = SessionLocal()
+    session.add(RestaurantORM(id=1, nombre="Test"))
+    session.commit()
+    session.close()
+    return engine, SessionLocal
 
+
+def test_mesa_orm_se_persiste_y_se_recupera():
+    engine, SessionLocal = _crear_engine_con_restaurant()
     session = SessionLocal()
     try:
-        mesa = MesaORM(numero=1, capacidad=4)
+        mesa = MesaORM(restaurant_id=1, numero=1, capacidad=4)
         session.add(mesa)
         session.commit()
         session.refresh(mesa)
@@ -28,18 +36,10 @@ def test_mesa_orm_se_persiste_y_se_recupera():
 
 
 def test_mesa_orm_check_capacidad_positiva():
-    engine = create_engine("sqlite:///:memory:", future=True)
-    Base.metadata.create_all(engine)
-    SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
-
+    engine, SessionLocal = _crear_engine_con_restaurant()
     session = SessionLocal()
     try:
-        # SQLite por defecto NO valida CHECK constraints a menos que se active
-        # `PRAGMA foreign_keys`/`legacy_alter_table`. Pero el CheckConstraint
-        # nombrado debe estar en el DDL; lo verificamos así:
-        result = session.execute(
-            text("SELECT sql FROM sqlite_master WHERE name='mesa'")
-        ).scalar()
+        result = session.execute(text("SELECT sql FROM sqlite_master WHERE name='mesa'")).scalar()
         assert "capacidad_positiva" in result
     finally:
         session.close()

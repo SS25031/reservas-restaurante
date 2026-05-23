@@ -25,6 +25,7 @@ def make_args(**overrides):
     base = dict(
         cliente="Ana",
         telefono="7000-0000",
+        email="ana@example.com",
         personas=2,
         fecha=LUNES,
         turno=Turno.NOCHE,
@@ -34,6 +35,7 @@ def make_args(**overrides):
 
 
 # ---------------- hacer_reserva ----------------
+
 
 def test_hacer_reserva_exitosa(service: ReservaService):
     reserva = service.hacer_reserva(**make_args())
@@ -64,6 +66,16 @@ def test_cliente_vacio_es_invalido(service: ReservaService):
         service.hacer_reserva(**make_args(cliente="   "))
 
 
+def test_email_vacio_es_invalido(service: ReservaService):
+    with pytest.raises(ValorInvalidoError):
+        service.hacer_reserva(**make_args(email="   "))
+
+
+def test_email_invalido_es_rechazado(service: ReservaService):
+    with pytest.raises(ValorInvalidoError):
+        service.hacer_reserva(**make_args(email="no-es-email"))
+
+
 def test_limite_diario(service: ReservaService):
     for _ in range(25):
         service.hacer_reserva(**make_args(personas=2))
@@ -72,9 +84,7 @@ def test_limite_diario(service: ReservaService):
 
 
 def test_limite_diario_personalizable():
-    svc = ReservaService(
-        construir_mesas(), config=Configuracion(max_reservas_por_dia=2)
-    )
+    svc = ReservaService(construir_mesas(), config=Configuracion(max_reservas_por_dia=2))
     svc.hacer_reserva(**make_args(personas=2))
     svc.hacer_reserva(**make_args(personas=4))
     with pytest.raises(LimiteDiarioExcedidoError):
@@ -115,9 +125,7 @@ def test_si_todas_las_mesas_ocupadas_lanza_mesa_no_disponible(service: ReservaSe
 
 
 def test_mesa_no_disponible_cuando_limite_diario_alto():
-    svc = ReservaService(
-        construir_mesas(), config=Configuracion(max_reservas_por_dia=999)
-    )
+    svc = ReservaService(construir_mesas(), config=Configuracion(max_reservas_por_dia=999))
     # Llenar el turno MANANA con 25 reservas distintas
     for _ in range(25):
         svc.hacer_reserva(**make_args(personas=2, turno=Turno.MANANA))
@@ -128,6 +136,7 @@ def test_mesa_no_disponible_cuando_limite_diario_alto():
 
 
 # ---------------- cancelar_reserva ----------------
+
 
 def test_cancelar_reserva_existente(service: ReservaService):
     reserva = service.hacer_reserva(**make_args())
@@ -149,11 +158,10 @@ def test_cancelar_libera_la_mesa(service: ReservaService):
 
 # ---------------- editar_reserva ----------------
 
+
 def test_editar_a_horario_libre(service: ReservaService):
     reserva = service.hacer_reserva(**make_args())
-    actualizada = service.editar_reserva(
-        reserva.id, nueva_fecha=MARTES, nuevo_turno=Turno.TARDE
-    )
+    actualizada = service.editar_reserva(reserva.id, nueva_fecha=MARTES, nuevo_turno=Turno.TARDE)
     assert actualizada.fecha == MARTES
     assert actualizada.turno is Turno.TARDE
 
@@ -173,9 +181,7 @@ def test_editar_aplica_limite_diario_a_nueva_fecha(service: ReservaService):
     reserva_lunes = service.hacer_reserva(**make_args(personas=2, fecha=LUNES))
     # Moverla a MARTES debe rechazar.
     with pytest.raises(LimiteDiarioExcedidoError):
-        service.editar_reserva(
-            reserva_lunes.id, nueva_fecha=MARTES, nuevo_turno=Turno.MANANA
-        )
+        service.editar_reserva(reserva_lunes.id, nueva_fecha=MARTES, nuevo_turno=Turno.MANANA)
 
 
 def test_editar_inexistente_lanza_no_encontrada(service: ReservaService):
@@ -184,6 +190,7 @@ def test_editar_inexistente_lanza_no_encontrada(service: ReservaService):
 
 
 # ---------------- mesas_disponibles + buscar ----------------
+
 
 def test_mesas_disponibles_excluye_reservadas(service: ReservaService):
     service.hacer_reserva(**make_args())
