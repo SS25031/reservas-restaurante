@@ -1,4 +1,4 @@
-# Sistema de Reservas: El Corrientazo
+# Sistema de Reservas para Restaurantes
 
 Este es un programa CLI creado en Python que permite a un restaurante agendar, cancelar y revisar el estado de sus 25 mesas a lo largo de la semana.
 
