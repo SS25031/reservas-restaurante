@@ -1,35 +1,41 @@
-from models import Dia, Turno
+"""Console-based user interface for the reservation system.
+
+All business logic is delegated to `ReservaService`. Domain exceptions
+raised by the service are caught here and rendered as friendly messages.
+"""
+
+from collections.abc import Callable
+from datetime import date
+
+from exceptions import ReservaError
+from models import Turno
 from services import ReservaService
+
+OnMutation = Callable[[], None] | None
 
 
 class ConsoleUI:
-    """
-    Handles all user interaction (input/output).
-    Delegates every business decision to ReservaService.
-    """
+    """Handles all user interaction (input/output)."""
 
-    SEP = "-" * 42
+    SEP = "-" * 50
 
-    def __init__(self, service: ReservaService):
+    def __init__(self, service: ReservaService, on_mutation: OnMutation = None):
         self.service = service
+        self._on_mutation: Callable[[], None] = on_mutation or (lambda: None)
 
-    # ------------------------------------------------------------------ #
-    # Main loop                                                            #
-    # ------------------------------------------------------------------ #
+    # ---------------- main loop ----------------
 
     def run(self) -> None:
         print("*** BIENVENIDO AL SISTEMA DE RESERVAS ***")
         while True:
             self._mostrar_menu()
-            opcion = self._leer_entero("Seleccione una opcion: ")
+            opcion = self._leer_entero("Seleccione una opción: ", minimo=0, maximo=5)
             if opcion == 0:
                 break
             self._despachar(opcion)
-        print("La sesion ha finalizado.")
+        print("La sesión ha finalizado.")
 
-    # ------------------------------------------------------------------ #
-    # Menu                                                                 #
-    # ------------------------------------------------------------------ #
+    # ---------------- menu ----------------
 
     def _mostrar_menu(self) -> None:
         print(f"\n{self.SEP}")
@@ -42,34 +48,38 @@ class ConsoleUI:
         print(self.SEP)
 
     def _despachar(self, opcion: int) -> None:
-        acciones = {
+        acciones: dict[int, Callable[[], None]] = {
             1: self._hacer_reserva,
             2: self._ver_reservas,
             3: self._cancelar_reserva,
             4: self._editar_reserva,
             5: self._ver_mesas_disponibles,
         }
-        accion = acciones.get(opcion)
-        if accion:
+        accion = acciones[opcion]
+        try:
             accion()
-        else:
-            print("Opcion no valida, intente nuevamente.")
+        except ReservaError as e:
+            print(f"\nError: {e}")
 
-    # ------------------------------------------------------------------ #
-    # Feature handlers                                                     #
-    # ------------------------------------------------------------------ #
+    # ---------------- feature handlers ----------------
 
     def _hacer_reserva(self) -> None:
         print("\n*** NUEVA RESERVA ***")
-        personas = self._leer_entero("Cantidad de personas: ")
-        dia = self._leer_dia()
+        cliente = self._leer_texto("Nombre del cliente: ")
+        telefono = self._leer_texto("Teléfono: ")
+        personas = self._leer_entero("Cantidad de personas: ", minimo=1)
+        fecha = self._leer_fecha()
         turno = self._leer_turno()
 
-        ok, mensaje, reserva = self.service.hacer_reserva(personas, dia, turno)
-        if ok:
-            print(f"\n{reserva}")
-        else:
-            print(f"\nError: {mensaje}")
+        reserva = self.service.hacer_reserva(
+            cliente=cliente,
+            telefono=telefono,
+            personas=personas,
+            fecha=fecha,
+            turno=turno,
+        )
+        print(f"\nReserva realizada con éxito:\n{reserva}")
+        self._on_mutation()
 
     def _ver_reservas(self) -> None:
         print("\n*** VER RESERVAS ***")
@@ -79,22 +89,15 @@ class ConsoleUI:
 
         print("1. Ver todas las reservas")
         print("2. Buscar por ID")
-        opcion = self._leer_entero("Opcion: ")
+        opcion = self._leer_entero("Opción: ", minimo=1, maximo=2)
 
         if opcion == 1:
             print(f"\nTotal de reservas: {self.service.total_reservas}")
             for r in self.service.todas_las_reservas():
                 print(r)
-
-        elif opcion == 2:
-            rid = self._leer_entero("ID de reserva: ")
-            reserva = self.service.buscar_por_id(rid)
-            if reserva:
-                print(reserva)
-            else:
-                print("No se encontro ninguna reserva con ese ID.")
         else:
-            print("Opcion no valida.")
+            rid = self._leer_entero("ID de reserva: ", minimo=1)
+            print(self.service.buscar_por_id(rid))
 
     def _cancelar_reserva(self) -> None:
         print("\n*** CANCELAR RESERVA ***")
@@ -102,19 +105,15 @@ class ConsoleUI:
             print("No hay reservas registradas.")
             return
 
-        rid = self._leer_entero("ID de la reserva a cancelar: ")
+        rid = self._leer_entero("ID de la reserva a cancelar: ", minimo=1)
         reserva = self.service.buscar_por_id(rid)
-        if not reserva:
-            print("No se encontro ninguna reserva con ese ID.")
-            return
-
         print(reserva)
-        confirmacion = input("¿Confirma la cancelacion? (S/N): ").strip().upper()
-        if confirmacion == "S":
-            ok, mensaje = self.service.cancelar_reserva(rid)
-            print(mensaje)
+        if self._confirmar("¿Confirma la cancelación? (S/N): "):
+            self.service.cancelar_reserva(rid)
+            print("Reserva cancelada exitosamente.")
+            self._on_mutation()
         else:
-            print("Cancelacion abortada. La reserva sigue activa.")
+            print("Cancelación abortada. La reserva sigue activa.")
 
     def _editar_reserva(self) -> None:
         print("\n*** EDITAR RESERVA ***")
@@ -122,53 +121,74 @@ class ConsoleUI:
             print("No hay reservas registradas.")
             return
 
-        rid = self._leer_entero("ID de la reserva a editar: ")
+        rid = self._leer_entero("ID de la reserva a editar: ", minimo=1)
         reserva = self.service.buscar_por_id(rid)
-        if not reserva:
-            print("No se encontro ninguna reserva con ese ID.")
-            return
-
         print(f"\nReserva actual:\n{reserva}")
-        nuevo_dia = self._leer_dia()
+
+        nueva_fecha = self._leer_fecha()
         nuevo_turno = self._leer_turno()
 
-        ok, mensaje = self.service.editar_reserva(rid, nuevo_dia, nuevo_turno)
-        print(mensaje)
+        actualizada = self.service.editar_reserva(
+            rid, nueva_fecha=nueva_fecha, nuevo_turno=nuevo_turno
+        )
+        print(f"\nReserva actualizada:\n{actualizada}")
+        self._on_mutation()
 
     def _ver_mesas_disponibles(self) -> None:
         print("\n*** MESAS DISPONIBLES ***")
-        dia = self._leer_dia()
+        fecha = self._leer_fecha()
         turno = self._leer_turno()
-        mesas = self.service.mesas_disponibles(dia, turno)
+        mesas = self.service.mesas_disponibles(fecha, turno)
         if not mesas:
-            print("No hay mesas disponibles para ese dia y turno.")
+            print("No hay mesas disponibles para esa fecha y turno.")
         else:
             for m in mesas:
                 print(f"Mesa {m.numero:>2}  (Capacidad: {m.capacidad} personas)")
 
-    # ------------------------------------------------------------------ #
-    # Input helpers                                                        #
-    # ------------------------------------------------------------------ #
+    # ---------------- input helpers ----------------
 
-    def _leer_entero(self, prompt: str) -> int:
+    def _leer_texto(self, prompt: str) -> str:
+        while True:
+            valor = input(prompt).strip()
+            if valor:
+                return valor
+            print("El valor no puede estar vacío.")
+
+    def _leer_entero(
+        self,
+        prompt: str,
+        *,
+        minimo: int | None = None,
+        maximo: int | None = None,
+    ) -> int:
         while True:
             try:
-                return int(input(prompt))
+                valor = int(input(prompt))
             except ValueError:
-                print("Ingrese un numero entero valido.")
+                print("Ingrese un número entero válido.")
+                continue
+            if minimo is not None and valor < minimo:
+                print(f"Debe ser ≥ {minimo}.")
+                continue
+            if maximo is not None and valor > maximo:
+                print(f"Debe ser ≤ {maximo}.")
+                continue
+            return valor
 
-    def _leer_dia(self) -> int:
-        print("Dias: 1-Lunes  2-Martes  3-Miercoles  4-Jueves  5-Viernes  6-Sabado  7-Domingo")
+    def _leer_fecha(self) -> date:
+        print("Fecha en formato AAAA-MM-DD (ej. 2026-06-15)")
         while True:
-            dia = self._leer_entero("Dia (1-7): ")
-            if 1 <= dia <= 7:
-                return dia
-            print("Dia invalido. Ingrese un valor entre 1 y 7.")
+            texto = input("Fecha: ").strip()
+            try:
+                return date.fromisoformat(texto)
+            except ValueError:
+                print("Formato inválido. Use AAAA-MM-DD.")
 
-    def _leer_turno(self) -> int:
-        print("Turnos: 1-Manana  2-Tarde  3-Noche")
-        while True:
-            turno = self._leer_entero("Turno (1-3): ")
-            if 1 <= turno <= 3:
-                return turno
-            print("Turno invalido. Ingrese 1, 2 o 3.")
+    def _leer_turno(self) -> Turno:
+        print("Turnos: 1-Mañana  2-Tarde  3-Noche")
+        valor = self._leer_entero("Turno (1-3): ", minimo=1, maximo=3)
+        return Turno.desde_entero(valor)
+
+    def _confirmar(self, prompt: str) -> bool:
+        respuesta = input(prompt).strip().lower()
+        return respuesta in {"s", "si", "sí", "y", "yes"}
