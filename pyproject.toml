@@ -24,7 +24,7 @@ dev = [
 py-modules = ["config", "exceptions", "main", "restaurante"]
 
 [tool.setuptools.packages.find]
-include = ["models*", "services*", "ui*"]
+include = ["models*", "services*", "ui*", "repositories*"]
 exclude = ["pseint*", "tests*"]
 
 [tool.ruff]
@@ -44,7 +44,7 @@ warn_unused_ignores = true
 warn_redundant_casts = true
 disallow_untyped_defs = true
 ignore_missing_imports = false
-files = ["main.py", "config.py", "exceptions.py", "restaurante.py", "models", "services", "ui"]
+files = ["main.py", "config.py", "exceptions.py", "restaurante.py", "models", "services", "ui", "repositories"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -201,3 +201,21 @@ def test_todas_las_reservas_ordenadas_por_fecha(service: ReservaService):
 def test_buscar_por_id_inexistente_lanza(service: ReservaService):
     with pytest.raises(ReservaNoEncontradaError):
         service.buscar_por_id(123)
+
+
+# ---------------- persistence integration ----------------
+
+def test_servicio_roundtrip_via_repositorio(tmp_path):
+    from repositories import JsonReservaRepository
+
+    repo = JsonReservaRepository(tmp_path / "datos.json")
+    svc = ReservaService(construir_mesas())
+    reserva = svc.hacer_reserva(**make_args(personas=4))
+    svc.persistir_en(repo)
+
+    recuperado = ReservaService.cargar_desde(construir_mesas(), repo)
+    assert recuperado.total_reservas == 1
+    assert recuperado.buscar_por_id(reserva.id).cliente == reserva.cliente
+    # El siguiente ID no debe colisionar.
+    siguiente = recuperado.hacer_reserva(**make_args(personas=4, fecha=MARTES))
+    assert siguiente.id == reserva.id + 1
