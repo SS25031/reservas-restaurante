@@ -55,3 +55,15 @@ class RegistroCerradoError(AuthError):
 
 class SesionInvalidaError(AuthError):
     """La sesión no existe o expiró."""
+
+
+class ReservasPublicasCerradasError(ReservaError):
+    """El restaurante aún no acepta reservas públicas."""
+
+
+class DiaCerradoError(ReservaError):
+    """El día solicitado está cerrado para reservas."""
+
+
+class TurnoInactivoError(ReservaError):
+    """El turno solicitado no está activo."""

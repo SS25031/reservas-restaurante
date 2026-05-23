@@ -1,9 +1,10 @@
 """Dependencias compartidas de la capa API."""
 
-from fastapi import Depends, Request
+from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from starlette.responses import Response
 
+from reservas_app.api.rate_limit import InMemoryRateLimiter
 from reservas_app.config import Configuracion
 from reservas_app.db import get_db
 from reservas_app.exceptions import SesionInvalidaError
@@ -11,8 +12,13 @@ from reservas_app.models.orm import AdminUserORM
 from reservas_app.services.admin_service import AdminService
 from reservas_app.services.auth_service import AuthService
 from reservas_app.services.onboarding_service import OnboardingService
+from reservas_app.services.public_booking_service import PublicBookingService
 
 _config = Configuracion()
+_public_rate_limiter = InMemoryRateLimiter(
+    max_requests=_config.public_rate_limit_requests,
+    window_seconds=_config.public_rate_limit_window_seconds,
+)
 
 
 def get_config() -> Configuracion:
@@ -29,6 +35,34 @@ def get_onboarding_service(db: Session = Depends(get_db)) -> OnboardingService:
 
 def get_admin_service(db: Session = Depends(get_db)) -> AdminService:
     return AdminService(db)
+
+
+def get_public_booking_service(db: Session = Depends(get_db)) -> PublicBookingService:
+    return PublicBookingService(db)
+
+
+def get_public_rate_limiter() -> InMemoryRateLimiter:
+    return _public_rate_limiter
+
+
+def client_ip(request: Request) -> str:
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    if request.client is not None:
+        return request.client.host
+    return "unknown"
+
+
+def enforce_public_rate_limit(
+    request: Request,
+    limiter: InMemoryRateLimiter = Depends(get_public_rate_limiter),
+) -> None:
+    if not limiter.allow(client_ip(request)):
+        raise HTTPException(
+            status_code=429,
+            detail="Demasiadas solicitudes. Inténtelo de nuevo más tarde.",
+        )
 
 
 def _token_desde_request(request: Request) -> str | None:
