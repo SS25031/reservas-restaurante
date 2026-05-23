@@ -5,7 +5,8 @@ import pytest
 from reservas_app.config import Configuracion
 
 
-def test_configuracion_defaults_son_validos():
+def test_configuracion_defaults_son_validos(monkeypatch):
+    monkeypatch.delenv("DATABASE_URL", raising=False)
     config = Configuracion()
     assert config.max_reservas_por_dia == 25
     assert config.capacidad_maxima_grupo == 10
