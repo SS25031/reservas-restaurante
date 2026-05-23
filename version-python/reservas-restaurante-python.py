@@ -77,6 +77,8 @@ def ver_mesas_disponibles(dia, turno, calendario):
             print(f"Mesa {i + 1}: [LIBRE]")
 
 
+# 4. FUNCION PARA EDITAR RESERVA
+
 # MENU PRINCIPAL#
 while True:
     print("#-------------------------------------#")
@@ -85,10 +87,11 @@ while True:
     print("#-------------------------------------#")
     print("1. Realizar reserva")
     print("2. Cancelar reserva")
-    print("3. Ver mesas disponibles")
-    print("4. Salir del sistema")
+    print("3. Ver estado de las mesas")
+    print("4. Editar reserva")
+    print("5. Salir del sistema")
 
-    opcion = input("Selecciona una opcion(1-4): ")
+    opcion = input("Selecciona una opcion(1-5): ")
 
     match opcion:
         case "1":
@@ -220,7 +223,12 @@ while True:
             print("#---LISTADO DE MESAS DISPONIBLES PARA EL SIGUIENTE HORRIO---")
             print(f"DIA: {nombre_dia[dia]} --> TURNO: {nombre_turno[turno]}")
             ver_mesas_disponibles(dia, turno, calendario)
+        
         case "4":
+            #Funcion editar_reserva()
+            pass
+
+        case "5":
             # Salida del sistema
             print("Saliendo del sistema...")
             print("Hasta pronto!")
