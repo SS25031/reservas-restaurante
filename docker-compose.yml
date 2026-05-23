@@ -1,0 +1,31 @@
+services:
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      - ./deploy/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - backend
+      - frontend
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      DATABASE_URL: sqlite:////data/reservas.db
+      CORS_ORIGINS: ${APP_ORIGIN:-http://localhost:8080}
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+    volumes:
+      - backend-data:/data
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      ORIGIN: ${APP_ORIGIN:-http://localhost:8080}
+      PORT: "3000"
+      HOST: 0.0.0.0
+
+volumes:
+  backend-data:

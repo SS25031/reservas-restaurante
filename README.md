@@ -32,7 +32,7 @@ En desarrollo, arranca **backend y frontend** a la vez. El proxy de Vite reenví
 ### Flujo admin inicial
 
 1. Abrir http://localhost:5173/register — crear primer administrador
-2. Tras el registro, redirige a `/admin`
+2. Tras el registro, redirige a `/admin/onboarding`
 3. Configurar mesas en `/admin/onboarding` (wizard con editor Konva)
 4. Gestionar reservas en `/admin/reservas` o `/admin/calendario`
 
@@ -89,3 +89,32 @@ reservas-restaurante/
 ```
 
 Orden de construcción acordado: **1 → 2 → 3 → 6 → 5 → 9 → 4 → 8 → 7 → 10** (ver specs en `docs/superpowers/`).
+
+## CI
+
+GitHub Actions (`.github/workflows/ci.yml`) en ramas `main` y `modernize`:
+
+- Backend: ruff, mypy, pytest (3.10–3.12), migraciones Alembic
+- Frontend: `npm run check`, `npm run build` + artifact del build
+- Docker: `docker compose build` tras los jobs anteriores
+
+## Despliegue (Docker)
+
+Stack con nginx como reverse proxy (mismo origen para cookies de sesión):
+
+```bash
+# Desde la raíz del repo
+docker compose up --build -d
+# App en http://localhost:8080
+```
+
+Variables opcionales en `.env`:
+
+| Variable | Default | Uso |
+|----------|---------|-----|
+| `APP_PORT` | `8080` | Puerto publicado por nginx |
+| `APP_ORIGIN` | `http://localhost:8080` | ORIGIN del frontend + CORS backend |
+| `SESSION_COOKIE_SECURE` | `false` | `true` en HTTPS |
+
+La base SQLite persiste en el volumen `backend-data`.
+
