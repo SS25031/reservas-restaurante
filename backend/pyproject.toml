@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "reservas-restaurante"
-version = "0.2.0"
+version = "0.3.0"
 description = "Sistema de reservas de restaurante (CLI)"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -20,12 +20,9 @@ dev = [
     "mypy>=1.10",
 ]
 
-[tool.setuptools]
-py-modules = ["config", "exceptions", "main", "restaurante"]
-
 [tool.setuptools.packages.find]
-include = ["models*", "services*", "ui*", "repositories*"]
-exclude = ["pseint*", "tests*"]
+include = ["reservas_app*"]
+exclude = ["tests*"]
 
 [tool.ruff]
 line-length = 100
@@ -44,7 +41,11 @@ warn_unused_ignores = true
 warn_redundant_casts = true
 disallow_untyped_defs = true
 ignore_missing_imports = false
-files = ["main.py", "config.py", "exceptions.py", "restaurante.py", "models", "services", "ui", "repositories"]
+files = ["reservas_app", "tests"]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

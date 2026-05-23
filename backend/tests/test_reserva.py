@@ -1,6 +1,7 @@
 """Tests for Reserva model (post-refactor)."""
 
 from datetime import date
+from typing import Any
 
 import pytest
 
@@ -8,8 +9,8 @@ from reservas_app.exceptions import ValorInvalidoError
 from reservas_app.models import Reserva, Turno
 
 
-def make_reserva(**overrides) -> Reserva:
-    base = dict(
+def make_reserva(**overrides: Any) -> Reserva:
+    base: dict[str, Any] = dict(
         id=1,
         fecha=date(2026, 6, 5),  # viernes
         turno=Turno.NOCHE,
