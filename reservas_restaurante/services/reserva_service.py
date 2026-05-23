@@ -4,8 +4,9 @@ All methods that can fail raise a subclass of `ReservaError`. The UI layer
 is responsible for catching these and presenting friendly messages.
 """
 
+from collections.abc import Iterable
 from datetime import date
-from typing import TYPE_CHECKING, Iterable, Optional
+from typing import TYPE_CHECKING
 
 from ..config import Configuracion
 from ..exceptions import (
@@ -28,8 +29,8 @@ class ReservaService:
     def __init__(
         self,
         mesas: Iterable[Mesa],
-        config: Optional[Configuracion] = None,
-        reservas_iniciales: Optional[list[Reserva]] = None,
+        config: Configuracion | None = None,
+        reservas_iniciales: list[Reserva] | None = None,
         ultimo_id: int = 0,
     ):
         self.mesas: list[Mesa] = list(mesas)
@@ -157,7 +158,7 @@ class ReservaService:
         cls,
         mesas: Iterable[Mesa],
         repositorio: "ReservaRepository",
-        config: Optional[Configuracion] = None,
+        config: Configuracion | None = None,
     ) -> "ReservaService":
         reservas, ultimo_id = repositorio.cargar()
         return cls(
@@ -196,7 +197,7 @@ class ReservaService:
 
     def _primera_mesa_libre(
         self, personas: int, fecha: date, turno: Turno
-    ) -> Optional[Mesa]:
+    ) -> Mesa | None:
         ocupadas = self._mesas_ocupadas(fecha, turno)
         for mesa in self.mesas:
             if mesa.puede_acomodar(personas) and mesa.numero not in ocupadas:
