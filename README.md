@@ -1,18 +1,119 @@
-# Sistema de Reservas para Restaurantes
+# Sistema de Reservas de Restaurante
 
-Este es un programa CLI creado en Python que permite a un restaurante agendar, cancelar y revisar el estado de sus 25 mesas a lo largo de la semana.
+Backend FastAPI + frontend SvelteKit para gestionar reservas de un restaurante.
 
-## Caracteristicas
-* [x] Registrar reservas nuevas en dias y turnos especificos
-* [x] Ver la disponibilidad de mesas
-* [x] Cancelar reservas
-* [] Editar reservas (Proximamente)
+> **Nota:** La CLI original fue retirada. El archivo `~/.reservas-restaurante/reservas.json` ya no se usa.
 
-### Instrucciones de Uso
-1. Abre tu terminal o consola de comandos
-2. Debes estar en la misma carpteta donde guardaste el proyecto
-3. Para iniciar el sistema, escribe el siguiente comando y luego presiona Enter: `python3 reservas-restaurante-python.py`
-4. Una vez abierto, usa los numeros del teclado (1, 2, 3, 4) y presiona enter para elegir las opciones del menu.
+## Requisitos
 
-## Autor
-* katie
+- Python ≥ 3.10
+- Node.js ≥ 20 (frontend)
+
+## Backend
+
+```bash
+cd backend
+python3 -m venv .venv
+.venv/bin/pip install -e ".[dev]"
+.venv/bin/alembic upgrade head
+.venv/bin/uvicorn reservas_app.main:app --reload --port 8000
+```
+
+## Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev    # http://localhost:5173 — proxy /api → backend :8000
+```
+
+En desarrollo, arranca **backend y frontend** a la vez. El proxy de Vite reenvía `/api` y `/health` al backend para que las cookies de sesión funcionen.
+
+### Flujo admin inicial
+
+1. Abrir http://localhost:5173/register — crear primer administrador
+2. Tras el registro, redirige a `/admin/onboarding`
+3. Configurar mesas en `/admin/onboarding` (wizard con editor Konva)
+4. Gestionar reservas en `/admin/reservas` o `/admin/calendario`
+
+### Panel admin
+
+| Ruta | Función |
+|------|---------|
+| `/admin` | Resumen, estado onboarding, reabrir configuración |
+| `/admin/reservas` | Listado, crear, editar fecha/turno, cancelar |
+| `/admin/calendario` | Vista mensual con detalle por día |
+| `/admin/onboarding` | Wizard: restaurante, mesas (Konva), turnos, calendario |
+
+### API pública (sin auth)
+
+| Método | Ruta | Función |
+|--------|------|---------|
+| `GET` | `/api/v1/public/restaurant` | Info del restaurante |
+| `GET` | `/api/v1/public/disponibilidad` | Turnos disponibles (`fecha`, `personas`) |
+| `POST` | `/api/v1/public/reservas` | Crear reserva |
+
+Rate limit configurable: `PUBLIC_RATE_LIMIT_REQUESTS` (default 20/min por IP).
+
+### Reserva pública (clientes)
+
+| Ruta | Función |
+|------|---------|
+| `/` | Inicio con enlace a reservar |
+| `/reservar` | Wizard: fecha → turno/datos → confirmación |
+
+## Desarrollo backend
+
+```bash
+cd backend
+.venv/bin/pytest
+.venv/bin/ruff check .
+.venv/bin/mypy
+```
+
+## Desarrollo frontend
+
+```bash
+cd frontend
+npm run check
+npm run build
+```
+
+## Arquitectura
+
+```
+reservas-restaurante/
+├── backend/          # FastAPI, SQLAlchemy, Alembic
+├── frontend/         # SvelteKit
+└── pseint/           # legado PSeInt (referencia)
+```
+
+Orden de construcción acordado: **1 → 2 → 3 → 6 → 5 → 9 → 4 → 8 → 7 → 10** (ver specs en `docs/superpowers/`).
+
+## CI
+
+GitHub Actions (`.github/workflows/ci.yml`) en ramas `main` y `modernize`:
+
+- Backend: ruff, mypy, pytest (3.10–3.12), migraciones Alembic
+- Frontend: `npm run check`, `npm run build` + artifact del build
+- Docker: `docker compose build` tras los jobs anteriores
+
+## Despliegue (Docker)
+
+Stack con nginx como reverse proxy (mismo origen para cookies de sesión):
+
+```bash
+# Desde la raíz del repo
+docker compose up --build -d
+# App en http://localhost:8080
+```
+
+Variables opcionales en `.env`:
+
+| Variable | Default | Uso |
+|----------|---------|-----|
+| `APP_PORT` | `8080` | Puerto publicado por nginx |
+| `APP_ORIGIN` | `http://localhost:8080` | ORIGIN del frontend + CORS backend |
+| `SESSION_COOKIE_SECURE` | `false` | `true` en HTTPS |
+
+La base SQLite persiste en el volumen `backend-data`.
