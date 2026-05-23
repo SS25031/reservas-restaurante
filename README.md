@@ -1,75 +1,64 @@
 # Sistema de Reservas de Restaurante
 
-Backend FastAPI con persistencia SQLite (vía SQLAlchemy + Alembic) para gestionar reservas de un restaurante. Frontend SvelteKit en construcción.
+Backend FastAPI + frontend SvelteKit para gestionar reservas de un restaurante.
 
-> **Nota:** La CLI original (`python main.py`) fue retirada. El estado anterior persistía en `~/.reservas-restaurante/reservas.json` — ese archivo ya no se usa y puede borrarse manualmente.
-
-## Distribución de mesas (default — configurable vía onboarding en subsistemas posteriores)
-
-| Mesas  | Capacidad   |
-| ------ | ----------- |
-|  1– 5  | 2 personas  |
-|  6–10  | 4 personas  |
-| 11–15  | 6 personas  |
-| 16–20  | 8 personas  |
-| 21–25  | 10 personas |
-
-Hasta **25 reservas/día** entre los turnos *Mañana*, *Tarde* y *Noche*.
+> **Nota:** La CLI original fue retirada. El archivo `~/.reservas-restaurante/reservas.json` ya no se usa.
 
 ## Requisitos
 
 - Python ≥ 3.10
+- Node.js ≥ 20 (frontend)
 
-## Instalación
+## Backend
 
 ```bash
-git clone <repo-url>
-cd reservas-restaurante/backend
+cd backend
 python3 -m venv .venv
 .venv/bin/pip install -e ".[dev]"
-.venv/bin/alembic upgrade head    # crea ./reservas.db
+.venv/bin/alembic upgrade head
+.venv/bin/uvicorn reservas_app.main:app --reload --port 8000
 ```
 
-## Correr el servidor
+## Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev    # http://localhost:5173 — proxy /api → backend :8000
+```
+
+En desarrollo, arranca **backend y frontend** a la vez. El proxy de Vite reenvía `/api` y `/health` al backend para que las cookies de sesión funcionen.
+
+### Flujo admin inicial
+
+1. Abrir http://localhost:5173/register — crear primer administrador
+2. Tras el registro, redirige a `/admin`
+3. Onboarding UI (mesas, turnos) llegará en subsistemas posteriores; la API ya está protegida
+
+## Desarrollo backend
 
 ```bash
 cd backend
-.venv/bin/uvicorn reservas_app.main:app --reload
-# Probar: curl http://localhost:8000/health
-# Auth: POST /api/v1/auth/register (primer admin) o /login; cookie HTTPOnly
-# Onboarding (requiere sesión): curl -b cookies.txt http://localhost:8000/api/v1/onboarding/estado
+.venv/bin/pytest
+.venv/bin/ruff check .
+.venv/bin/mypy
 ```
 
-## Desarrollo
+## Desarrollo frontend
 
 ```bash
-cd backend
-.venv/bin/pytest                # tests
-.venv/bin/ruff check .          # lint
-.venv/bin/ruff format .         # autoformat
-.venv/bin/mypy                  # type check
-.venv/bin/alembic upgrade head  # aplicar migraciones
+cd frontend
+npm run check
+npm run build
 ```
 
 ## Arquitectura
 
 ```
 reservas-restaurante/
-├── backend/
-│   ├── alembic/           # migraciones de base de datos
-│   ├── reservas_app/
-│   │   ├── main.py        # FastAPI app + endpoints
-│   │   ├── api/           # routers REST (onboarding, …)
-│   │   ├── config.py      # Configuración (incluye DATABASE_URL)
-│   │   ├── db.py          # engine, SessionLocal, get_db()
-│   │   ├── exceptions.py  # ReservaError + jerarquía
-│   │   ├── models/        # DTOs (dataclasses) + ORM (SQLAlchemy)
-│   │   ├── services/      # ReservaService (lógica de negocio)
-│   │   └── repositories/  # ReservaRepository (Protocol) + SqlAlchemyReservaRepository
-│   └── tests/             # pytest suite
-└── pseint/                # prototipo PSeInt previo (legado, no se usa)
+├── backend/          # FastAPI, SQLAlchemy, Alembic
+├── frontend/         # SvelteKit
+└── pseint/           # legado PSeInt (referencia)
 ```
 
-## Carpeta `pseint/`
-
-Contiene un prototipo previo en PSeInt. Se mantiene únicamente como referencia histórica y **no** forma parte del sistema actual.
+Orden de construcción acordado: **1 → 2 → 3 → 6 → 5 → 9 → 4 → 8 → 7 → 10** (ver specs en `docs/superpowers/`).
