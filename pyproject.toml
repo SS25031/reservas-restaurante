@@ -20,11 +20,11 @@ dev = [
     "mypy>=1.10",
 ]
 
-[project.scripts]
-reservas = "reservas_restaurante.__main__:main"
+[tool.setuptools]
+py-modules = ["config", "exceptions", "main", "restaurante"]
 
 [tool.setuptools.packages.find]
-include = ["reservas_restaurante*"]
+include = ["models*", "services*", "ui*"]
 exclude = ["pseint*", "tests*"]
 
 [tool.ruff]
@@ -44,7 +44,7 @@ warn_unused_ignores = true
 warn_redundant_casts = true
 disallow_untyped_defs = true
 ignore_missing_imports = false
-files = ["reservas_restaurante"]
+files = ["main.py", "config.py", "exceptions.py", "restaurante.py", "models", "services", "ui"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

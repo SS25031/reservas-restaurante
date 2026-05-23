@@ -8,7 +8,7 @@ Distribución (25 mesas):
   Mesas 21-25  -> capacidad 10
 """
 
-from .models import Mesa
+from models import Mesa
 
 
 def construir_mesas() -> list[Mesa]:

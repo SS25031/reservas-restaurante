@@ -2,9 +2,9 @@
 
 import pytest
 
-from reservas_restaurante.models import Mesa
-from reservas_restaurante.restaurante import construir_mesas
-from reservas_restaurante.services import ReservaService
+from models import Mesa
+from restaurante import construir_mesas
+from services import ReservaService
 
 
 @pytest.fixture

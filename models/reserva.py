@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import date
 from enum import Enum
 
-from ..exceptions import ValorInvalidoError
+from exceptions import ValorInvalidoError
 
 _NOMBRES_DIA_SEMANA: dict[int, str] = {
     0: "Lunes",

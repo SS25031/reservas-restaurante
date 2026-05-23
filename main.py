@@ -1,8 +1,8 @@
-"""Entry point: `python -m reservas_restaurante`."""
+"""Entry point: `python main.py`."""
 
-from .restaurante import construir_mesas
-from .services import ReservaService
-from .ui import ConsoleUI
+from restaurante import construir_mesas
+from services import ReservaService
+from ui import ConsoleUI
 
 
 def main() -> None:

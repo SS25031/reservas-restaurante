@@ -4,8 +4,8 @@ from datetime import date
 
 import pytest
 
-from reservas_restaurante.config import Configuracion
-from reservas_restaurante.exceptions import (
+from config import Configuracion
+from exceptions import (
     CapacidadInsuficienteError,
     ConflictoHorarioError,
     LimiteDiarioExcedidoError,
@@ -13,9 +13,9 @@ from reservas_restaurante.exceptions import (
     ReservaNoEncontradaError,
     ValorInvalidoError,
 )
-from reservas_restaurante.models import Reserva, Turno
-from reservas_restaurante.restaurante import construir_mesas
-from reservas_restaurante.services import ReservaService
+from models import Reserva, Turno
+from restaurante import construir_mesas
+from services import ReservaService
 
 LUNES = date(2026, 6, 1)
 MARTES = date(2026, 6, 2)
