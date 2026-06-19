@@ -1,4 +1,4 @@
-from config import reservas, CAPACIDAD_MESAS
+from config import reservas, CAPACIDAD_MESAS, guardar_datos
 from validaciones import validar_fecha, validar_hora
 
 
@@ -73,6 +73,8 @@ def crear_reserva():
 
     # Agg el dict al final de la lista reservas[]
     reservas.append(nueva_reserva)
+    guardar_datos(reservas) # Guardar datos formato .json
+    
     print("[*] Reserva creada con exito!")  # Msj de confirmacion
     print("NOMBRE: ", nueva_reserva["cliente"])
     print("FECHA: ", nueva_reserva["fecha"])

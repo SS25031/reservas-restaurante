@@ -1,4 +1,4 @@
-from config import reservas, CAPACIDAD_MESAS
+from config import reservas, CAPACIDAD_MESAS, guardar_datos
 from validaciones import validar_fecha, validar_hora
 
 def editar_reserva():
@@ -110,6 +110,7 @@ def editar_reserva():
 
     # Actualizar la lista global
     reservas.append(reserva_a_editar)
+    guardar_datos(reservas) # Guardar datos en formato .json
 
     print("\nReserva modificada exitosamente!")
     print(f"Nueva mesa asignada: #{mesa_asignada}\n")

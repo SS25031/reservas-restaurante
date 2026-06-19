@@ -1,4 +1,4 @@
-from config import reservas
+from config import reservas, guardar_datos
 
 def cancelar_reserva():
     print("\n=== CANCELAR RESERVAS ===")
@@ -41,6 +41,7 @@ def cancelar_reserva():
     if confirmacion == 's':
         # Se elimina el dict de la lista global
         reservas.remove(reserva_a_cancelar)
+        guardar_datos(reservas) # Guardar datos en formato .json
         print(f"[*] La reserva se ha eliminado correctamente!")
         print(f"La Mesa #{reserva_a_cancelar['mesa']} vuelve a estar libre.\n")
     else:
