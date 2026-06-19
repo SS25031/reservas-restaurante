@@ -1,10 +1,11 @@
 from funcionalidades.crear_reserva import crear_reserva
+from funcionalidades.ver_mesas import ver_mesas
 
 def menu_principal():
     while True:
         print("=== SISTEMA DE RESERVAS ===")
         print("1. Crear una reserva")
-        print("2. Ver todas las reservas")
+        print("2. Ver reservas registradas")
         print("3. Editar una reserva")
         print("4. Eliminar una reserva")
         print("0. Salir")
@@ -15,7 +16,7 @@ def menu_principal():
             case "1":
                 crear_reserva()
             case "2":
-                pass
+                ver_mesas()
             case "0":
                 print("Saliendo del sistema...")
                 print("Hasta pronto!")

@@ -1,8 +1,11 @@
 from config import reservas, CAPACIDAD_MESAS
-from  validaciones import validar_fecha, validar_hora
+from validaciones import validar_fecha, validar_hora
 
 
 def crear_reserva():
+    mesa_asignada = None
+    encontrada = False
+
     print("=== CREANDO RESERVA NUEVA ===")
 
     # Recolectar datos
@@ -40,9 +43,6 @@ def crear_reserva():
         "mesa": mesa_asignada
     }
 
-    mesa_asignada = None
-    encontrada = False
-
     # Asignar mesa en base a capacidad
     for mesa, capacidad in CAPACIDAD_MESAS.items():
         if personas <= capacidad:
@@ -52,14 +52,12 @@ def crear_reserva():
                 if res["mesa"] == mesa and res["fecha"] == fecha_reserva and res["hora"] == hora_reserva:
                     mesa_ocupada = True
                     break
+              # Si pasa el filtro, se asigna   
             if not mesa_ocupada:
                 mesa_asignada = mesa
                 encontrada = True
                 break
-            # Si pasa el filtro, se asigna
-            mesa_asignada = mesa
-            encontrada = True
-            break  # se detiene al encontrar una mesa
+           
     # Si no encontro mesa:
     if not encontrada:
         print("[!] No hay mesas disponibles en este momento")
@@ -76,3 +74,7 @@ def crear_reserva():
     # Agg el dict al final de la lista reservas[]
     reservas.append(nueva_reserva)
     print("[*] Reserva creada con exito!")  # Msj de confirmacion
+    print("NOMBRE: ", nueva_reserva["cliente"])
+    print("FECHA: ", nueva_reserva["fecha"])
+    print("HORA: ", nueva_reserva["hora"])
+    print("MESA ASIGNADA: #", nueva_reserva["mesa"])
