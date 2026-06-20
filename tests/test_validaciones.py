@@ -25,7 +25,7 @@ class TestValidaciones(unittest.TestCase):
         self.assertTrue(validar_hora("09:30"))
 
     def test_hora_incorrecta(self):
-        """Prueba que formatos de hora inválidos sean rechazados"""
+        """Prueba que formatos de hora invlidos sean rechazados"""
         self.assertFalse(validar_hora("1700"))         # Sin dos puntos
         self.assertFalse(validar_hora("5:00 PM"))      # Formato 12h
         self.assertFalse(validar_hora("25:00"))        # Hora irreal
