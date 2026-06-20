@@ -28,18 +28,6 @@ El código está refactorizado en una estructura modular para facilitar su escal
 
 ---
 
-## Cómo ejecutar el proyecto (Modo Usuario)
-
-Si no eres programador o simplemente quieres usar el sistema sin instalar Python, puedes usar la versión ejecutable:
-
-1. Descarga el archivo `main.exe` y el archivo `reservas_db.json`.
-2. Asegúrate de colocar **ambos archivos en la misma carpeta** (por ejemplo, en una carpeta llamada "Sistema Reservas" en tu Escritorio).
-3. Haz doble clic sobre `main.exe` para iniciar el programa.
-
-> **Nota sobre Antivirus:** Al ser un ejecutable creado de forma independiente, Windows Defender podría mostrar una pantalla azul indicando "Windows protegió su PC". Esto es normal. Simplemente haz clic en **"Más información"** y luego en **"Ejecutar de todas formas"**.
-
----
-
 ## Cómo ejecutar el proyecto (Modo Desarrollador)
 
 Asegúrate de tener Python instalado en tu sistema.
