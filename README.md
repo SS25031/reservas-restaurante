@@ -50,4 +50,3 @@ Asegúrate de tener Python instalado en tu sistema.
 
 ```bash
 python main.py
-* katie
